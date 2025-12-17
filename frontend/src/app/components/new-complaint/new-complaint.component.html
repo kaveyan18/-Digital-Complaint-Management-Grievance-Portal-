@@ -1,0 +1,88 @@
+<div class="new-complaint-container">
+    <mat-card class="complaint-card">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>add_circle</mat-icon>
+                Submit New Complaint
+            </mat-card-title>
+            <mat-card-subtitle>Fill in the details below to register your complaint</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="complaintForm" (ngSubmit)="onSubmit()">
+                <!-- Title Field -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Complaint Title</mat-label>
+                    <input matInput formControlName="title" placeholder="Brief title of your complaint">
+                    <mat-icon matSuffix>title</mat-icon>
+                    <mat-error *ngIf="complaintForm.get('title')?.hasError('required')">
+                        Title is required
+                    </mat-error>
+                    <mat-error *ngIf="complaintForm.get('title')?.hasError('minlength')">
+                        Title must be at least 5 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Category Selection -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category">
+                        <mat-option *ngFor="let cat of categories" [value]="cat.value">
+                            <mat-icon>{{cat.icon}}</mat-icon>
+                            {{cat.label}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="complaintForm.get('category')?.hasError('required')">
+                        Category is required
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Description Field -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" rows="5"
+                        placeholder="Describe your complaint in detail..."></textarea>
+                    <mat-error *ngIf="complaintForm.get('description')?.hasError('required')">
+                        Description is required
+                    </mat-error>
+                    <mat-error *ngIf="complaintForm.get('description')?.hasError('minlength')">
+                        Description must be at least 10 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Attachments (Optional) -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Attachments (Optional)</mat-label>
+                    <input matInput formControlName="attachments" placeholder="File path or URL">
+                    <mat-icon matSuffix>attach_file</mat-icon>
+                    <mat-hint>Enter file path or URL if you have supporting documents</mat-hint>
+                </mat-form-field>
+
+                <!-- Error Message -->
+                <div class="message error-message" *ngIf="errorMessage">
+                    <mat-icon>error</mat-icon>
+                    {{errorMessage}}
+                </div>
+
+                <!-- Success Message -->
+                <div class="message success-message" *ngIf="successMessage">
+                    <mat-icon>check_circle</mat-icon>
+                    {{successMessage}}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button mat-button type="button" routerLink="/complaints">
+                        <mat-icon>arrow_back</mat-icon>
+                        Cancel
+                    </button>
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="complaintForm.invalid || loading">
+                        <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                        <span *ngIf="!loading">Submit Complaint</span>
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

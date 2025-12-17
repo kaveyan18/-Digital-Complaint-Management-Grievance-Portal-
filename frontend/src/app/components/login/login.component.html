@@ -1,0 +1,57 @@
+<div class="login-container">
+    <div class="card login-card">
+        <div class="login-header">
+            <h3>Welcome Back</h3>
+            <p>Please enter your details to sign in.</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" formControlName="email" placeholder="name@example.com"
+                    [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                <div class="error-text"
+                    *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')">Email is
+                    required</div>
+                <div class="error-text"
+                    *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')">Invalid email
+                    format</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input id="password" [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                        placeholder="••••••••"
+                        [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    <button type="button" class="visibility-btn" (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </div>
+                <div class="error-text"
+                    *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')">
+                    Password is required</div>
+            </div>
+
+            <div class="form-actions">
+                <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <div class="error-message" *ngIf="errorMessage">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{errorMessage}}</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full" [disabled]="loginForm.invalid || loading">
+                <mat-spinner diameter="20" *ngIf="loading" class="spinner"></mat-spinner>
+                <span *ngIf="!loading">Sign In</span>
+            </button>
+        </form>
+
+        <div class="register-prompt">
+            Don't have an account? <a routerLink="/register">Create account</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="admin-dashboard">
+    <div class="header-section">
+        <h1>
+            <mat-icon>admin_panel_settings</mat-icon>
+            Admin Dashboard
+        </h1>
+        <p class="subtitle">Manage all complaints and assignments</p>
+    </div>
+
+    <!-- Stats Cards (Optional Analytics) -->
+    <div class="stats-grid" *ngIf="stats">
+        <mat-card class="stat-card">
+            <mat-card-content>
+                <div class="stat-value">{{stats.total}}</div>
+                <div class="stat-label">Total Complaints</div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="stat-card" *ngFor="let item of stats.byStatus">
+            <mat-card-content>
+                <div class="stat-value">{{item.count}}</div>
+                <div class="stat-label">{{item.status}}</div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Messages -->
+    <div class="message success-message" *ngIf="successMessage">
+        <mat-icon>check_circle</mat-icon>
+        {{successMessage}}
+    </div>
+    <div class="message error-message" *ngIf="errorMessage">
+        <mat-icon>error</mat-icon>
+        {{errorMessage}}
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading complaints...</p>
+    </div>
+
+    <!-- Complaints Table -->
+    <mat-card *ngIf="!loading && complaints.length > 0">
+        <mat-card-header>
+            <mat-card-title>All Complaints</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <table mat-table [dataSource]="complaints" class="full-width">
+                <!-- ID -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let c">#{{c.id}}</td>
+                </ng-container>
+
+                <!-- Title -->
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef>Title</th>
+                    <td mat-cell *matCellDef="let c">{{c.title}}</td>
+                </ng-container>
+
+                <!-- Category -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef>Category</th>
+                    <td mat-cell *matCellDef="let c">{{c.category | titlecase}}</td>
+                </ng-container>
+
+                <!-- User -->
+                <ng-container matColumnDef="user_name">
+                    <th mat-header-cell *matHeaderCellDef>Submitted By</th>
+                    <td mat-cell *matCellDef="let c">{{c.user_name}}</td>
+                </ng-container>
+
+                <!-- Status -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let c">
+                        <span class="status-badge" [ngClass]="getStatusClass(c.status)">{{c.status}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Assigned To -->
+                <ng-container matColumnDef="staff_name">
+                    <th mat-header-cell *matHeaderCellDef>Assigned To</th>
+                    <td mat-cell *matCellDef="let c">
+                        <mat-select [value]="c.staff_id" (selectionChange)="assignStaff(c, $event.value)"
+                            placeholder="Assign Staff">
+                            <mat-option [value]="null">Unassigned</mat-option>
+                            <mat-option *ngFor="let staff of staffMembers" [value]="staff.id">
+                                {{staff.name}}
+                            </mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
+
+                <!-- Actions -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let c">
+                        <button mat-icon-button (click)="viewDetails(c.id)" matTooltip="View">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+</div>

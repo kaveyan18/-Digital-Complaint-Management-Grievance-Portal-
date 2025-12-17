@@ -1,0 +1,55 @@
+<header class="navbar">
+  <div class="container nav-content">
+    <div class="nav-brand">
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
+      <a (click)="navigateToDashboard()" class="logo" style="cursor: pointer;">
+        <mat-icon style="margin-right: 0.5rem;">security</mat-icon>
+        <span>EazzGrievance</span>
+      </a>
+    </div>
+
+    <div class="nav-links" [class.active]="isMobileMenuOpen">
+      <ng-container *ngIf="!authService.isLoggedIn">
+        <a routerLink="/login" class="btn btn-outline nav-item" style="border: none;">Login</a>
+        <a routerLink="/register" class="btn btn-primary nav-item">Register</a>
+      </ng-container>
+
+      <ng-container *ngIf="authService.isLoggedIn">
+        <button mat-button [matMenuTriggerFor]="userMenu" class="btn btn-outline nav-item user-btn"
+          style="border: none; display: flex; align-items: center; gap: 0.5rem;">
+          <mat-icon>account_circle</mat-icon>
+          <span class="user-name">{{authService.currentUser?.name}}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu" class="custom-menu">
+          <div mat-menu-item disabled style="color: var(--text-secondary); font-size: 0.9rem;">
+            Role: {{authService.currentUser?.role}}
+          </div>
+          <button mat-menu-item (click)="navigateToDashboard()">
+            <mat-icon>dashboard</mat-icon> Dashboard
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon> Logout
+          </button>
+        </mat-menu>
+      </ng-container>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" style="padding-top: 0; flex: 1;">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <p style="margin: 0; font-size: 0.9rem;">&copy; 2025 EazzGrievance. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="javascript:void(0)">Privacy Policy</a>
+      <a href="javascript:void(0)">Terms of Service</a>
+      <a href="javascript:void(0)">Contact Support</a>
+    </div>
+  </div>
+</footer>

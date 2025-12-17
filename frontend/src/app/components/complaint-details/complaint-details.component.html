@@ -1,0 +1,135 @@
+<div class="details-container">
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading complaint details...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="error-message" *ngIf="errorMessage">
+        <mat-icon>error</mat-icon>
+        {{errorMessage}}
+    </div>
+
+    <!-- Complaint Details Card -->
+    <mat-card *ngIf="!loading && complaint" class="details-card">
+        <mat-card-header>
+            <mat-card-title>
+                <span class="complaint-id">#{{complaint.id}}</span>
+                {{complaint.title}}
+            </mat-card-title>
+            <span class="status-badge" [ngClass]="getStatusClass(complaint.status)">
+                {{complaint.status}}
+            </span>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="info-grid">
+                <!-- Category -->
+                <div class="info-item">
+                    <mat-icon>{{getCategoryIcon(complaint.category)}}</mat-icon>
+                    <div>
+                        <label>Category</label>
+                        <p>{{complaint.category | titlecase}}</p>
+                    </div>
+                </div>
+
+                <!-- Submitted By -->
+                <div class="info-item">
+                    <mat-icon>person</mat-icon>
+                    <div>
+                        <label>Submitted By</label>
+                        <p>{{complaint.user_name || 'Unknown'}}</p>
+                    </div>
+                </div>
+
+                <!-- Assigned To -->
+                <div class="info-item">
+                    <mat-icon>engineering</mat-icon>
+                    <div>
+                        <label>Assigned To</label>
+                        <p>{{complaint.staff_name || 'Not assigned'}}</p>
+                    </div>
+                </div>
+
+                <!-- Date -->
+                <div class="info-item">
+                    <mat-icon>calendar_today</mat-icon>
+                    <div>
+                        <label>Submitted On</label>
+                        <p>{{complaint.created_at | date:'medium'}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+                <h3>
+                    <mat-icon>description</mat-icon>
+                    Description
+                </h3>
+                <p>{{complaint.description}}</p>
+            </div>
+
+            <!-- Attachments -->
+            <div class="attachments-section" *ngIf="complaint.attachments">
+                <h3>
+                    <mat-icon>attach_file</mat-icon>
+                    Attachments
+                </h3>
+                <p>{{complaint.attachments}}</p>
+            </div>
+
+            <!-- Resolution Notes -->
+            <div class="resolution-section" *ngIf="complaint.resolution_notes">
+                <h3>
+                    <mat-icon>notes</mat-icon>
+                    Resolution Notes
+                </h3>
+                <p>{{complaint.resolution_notes}}</p>
+            </div>
+
+            <!-- Status Timeline -->
+            <div class="timeline-section">
+                <h3>
+                    <mat-icon>timeline</mat-icon>
+                    Status Flow
+                </h3>
+                <div class="status-flow">
+                    <div class="flow-item"
+                        [class.active]="complaint.status === 'Open' || complaint.status === 'Assigned' || complaint.status === 'In-progress' || complaint.status === 'Resolved'">
+                        <div class="flow-dot"></div>
+                        <span>Open</span>
+                    </div>
+                    <div class="flow-line"
+                        [class.active]="complaint.status === 'Assigned' || complaint.status === 'In-progress' || complaint.status === 'Resolved'">
+                    </div>
+                    <div class="flow-item"
+                        [class.active]="complaint.status === 'Assigned' || complaint.status === 'In-progress' || complaint.status === 'Resolved'">
+                        <div class="flow-dot"></div>
+                        <span>Assigned</span>
+                    </div>
+                    <div class="flow-line"
+                        [class.active]="complaint.status === 'In-progress' || complaint.status === 'Resolved'"></div>
+                    <div class="flow-item"
+                        [class.active]="complaint.status === 'In-progress' || complaint.status === 'Resolved'">
+                        <div class="flow-dot"></div>
+                        <span>In-progress</span>
+                    </div>
+                    <div class="flow-line" [class.active]="complaint.status === 'Resolved'"></div>
+                    <div class="flow-item" [class.active]="complaint.status === 'Resolved'">
+                        <div class="flow-dot"></div>
+                        <span>Resolved</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-button (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+                Back
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

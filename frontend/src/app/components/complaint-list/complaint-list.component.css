@@ -1,0 +1,202 @@
+.complaint-list-container {
+    width: 100%;
+    padding: 2.5rem;
+}
+
+/* Header Section */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+.header-text h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Table Card */
+.table-card {
+    padding: 0;
+    overflow: hidden;
+    /* For rounded corners on the table */
+    border: 1px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table Header */
+tr.mat-mdc-header-row {
+    background-color: #F8FAFC;
+    /* Slate 50 */
+    height: 52px;
+}
+
+th.mat-header-cell {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Table Rows */
+.table-row {
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.table-row:hover {
+    background-color: #F1F5F9;
+    /* Slate 100 */
+}
+
+td.mat-cell {
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+/* ID Column */
+.id-text {
+    font-family: monospace;
+    color: var(--text-secondary);
+    background: #F1F5F9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Title Column */
+.title-text {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+/* Category Column */
+.category-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.category-chip mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--accent-color);
+}
+
+/* Date Column */
+.date-cell {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Action Button */
+.action-btn {
+    color: var(--text-secondary);
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.table-row:hover .action-btn {
+    opacity: 1;
+    color: var(--accent-color);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Status Badges - Using Global Badge Class Base */
+.status-open {
+    background-color: #FEF3C7;
+    /* Amber 100 */
+    color: #92400E;
+    /* Amber 800 */
+}
+
+.status-assigned {
+    background-color: #DBEAFE;
+    /* Blue 100 */
+    color: #1E40AF;
+    /* Blue 800 */
+}
+
+.status-progress {
+    background-color: #E0E7FF;
+    /* Indigo 100 */
+    color: #3730A3;
+    /* Indigo 800 */
+}
+
+.status-resolved {
+    background-color: #D1FAE5;
+    /* Emerald 100 */
+    color: #065F46;
+    /* Emerald 800 */
+}
+
+/* Empty State */
+.no-complaints {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--border-color);
+}
+
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    background: #F1F5F9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .complaint-list-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .table-card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+}

@@ -1,0 +1,61 @@
+.new-complaint-container {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    min-height: calc(100vh - 64px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.complaint-card {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+}
+
+mat-card-header {
+    margin-bottom: 20px;
+}
+
+mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+mat-form-field {
+    margin-bottom: 10px;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+mat-option mat-icon {
+    margin-right: 10px;
+}
