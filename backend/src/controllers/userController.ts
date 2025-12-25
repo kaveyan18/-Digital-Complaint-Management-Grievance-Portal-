@@ -1,141 +1,52 @@
-import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import pool from '../config/database';
-import { UserRegistration, UserLogin, UserResponse } from '../models/User';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { Request, Response, NextFunction } from 'express';
+import { UserService } from '../services/userService';
+import { sendResponse } from '../utils/responseHelper';
+import { AppError } from '../utils/AppError';
+import { catchAsync } from '../utils/catchAsync';
+
+const userService = new UserService();
 
 // Register new user
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { name, email, password, role, contact_info }: UserRegistration = req.body;
+export const registerUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { name, email, password, role } = req.body;
 
-        // Validation
-        if (!name || !email || !password || !role) {
-            res.status(400).json({ message: 'Name, email, password, and role are required' });
-            return;
-        }
-
-        // Validate role
-        if (!['User', 'Staff', 'Admin'].includes(role)) {
-            res.status(400).json({ message: 'Role must be User, Staff, or Admin' });
-            return;
-        }
-
-        // Check if email exists
-        const [existingUsers] = await pool.execute<RowDataPacket[]>(
-            'SELECT id FROM users WHERE email = ?',
-            [email]
-        );
-
-        if (existingUsers.length > 0) {
-            res.status(409).json({ message: 'Email already registered' });
-            return;
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Insert user
-        const [result] = await pool.execute<ResultSetHeader>(
-            'INSERT INTO users (name, email, password, role, contact_info) VALUES (?, ?, ?, ?, ?)',
-            [name, email, hashedPassword, role, contact_info || null]
-        );
-
-        const userResponse: UserResponse = {
-            id: result.insertId,
-            name,
-            email,
-            role,
-            contact_info
-        };
-
-        res.status(201).json({ message: 'User registered successfully', user: userResponse });
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+    // Validation
+    if (!name || !email || !password || !role) {
+        throw new AppError('Name, email, password, and role are required', 400);
     }
-};
+
+    // Validate role
+    if (!['User', 'Staff', 'Admin'].includes(role)) {
+        throw new AppError('Role must be User, Staff, or Admin', 400);
+    }
+
+    const user = await userService.registerUser(req.body);
+    sendResponse(res, 201, 'User registered successfully', { user });
+});
 
 // Login user
-export const loginUser = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { email, password }: UserLogin = req.body;
+export const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
 
-        // Validation
-        if (!email || !password) {
-            res.status(400).json({ message: 'Email and password are required' });
-            return;
-        }
-
-        // Find user
-        const [users] = await pool.execute<RowDataPacket[]>(
-            'SELECT * FROM users WHERE email = ?',
-            [email]
-        );
-
-        if (users.length === 0) {
-            res.status(401).json({ message: 'Invalid email or password' });
-            return;
-        }
-
-        const user = users[0];
-
-        // Verify password
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) {
-            res.status(401).json({ message: 'Invalid email or password' });
-            return;
-        }
-
-        const userResponse: UserResponse = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            contact_info: user.contact_info,
-            created_at: user.created_at
-        };
-
-        res.status(200).json({ message: 'Login successful', user: userResponse });
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+    // Validation
+    if (!email || !password) {
+        throw new AppError('Email and password are required', 400);
     }
-};
+
+    const user = await userService.loginUser(req.body);
+    sendResponse(res, 200, 'Login successful', { user });
+});
 
 // Get user by ID
-export const getUserById = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { id } = req.params;
-
-        const [users] = await pool.execute<RowDataPacket[]>(
-            'SELECT id, name, email, role, contact_info, created_at FROM users WHERE id = ?',
-            [id]
-        );
-
-        if (users.length === 0) {
-            res.status(404).json({ message: 'User not found' });
-            return;
-        }
-
-        res.status(200).json({ user: users[0] });
-    } catch (error) {
-        console.error('Get user error:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
+export const getUserById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const user = await userService.getUserById(id);
+    sendResponse(res, 200, 'User details', { user });
+});
 
 // Get all staff members
-export const getStaffMembers = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const [staff] = await pool.execute<RowDataPacket[]>(
-            'SELECT id, name, email, contact_info FROM users WHERE role = ?',
-            ['Staff']
-        );
+export const getStaffMembers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const staff = await userService.getStaffMembers();
+    sendResponse(res, 200, 'Staff members list', { staff });
+});
 
-        res.status(200).json({ staff });
-    } catch (error) {
-        console.error('Get staff error:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};

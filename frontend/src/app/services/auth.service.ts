@@ -14,8 +14,14 @@ export class AuthService {
     constructor(private http: HttpClient) {
         // Check localStorage for existing user
         const storedUser = localStorage.getItem('currentUser');
-        if (storedUser) {
-            this.currentUserSubject.next(JSON.parse(storedUser));
+        if (storedUser && storedUser !== 'undefined') {
+            try {
+                this.currentUserSubject.next(JSON.parse(storedUser));
+            } catch (error) {
+                console.error('Error parsing stored user:', error);
+                localStorage.removeItem('currentUser');
+                this.currentUserSubject.next(null);
+            }
         }
     }
 
@@ -26,8 +32,10 @@ export class AuthService {
     login(credentials: UserLogin): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
-                localStorage.setItem('currentUser', JSON.stringify(response.user));
-                this.currentUserSubject.next(response.user);
+                if (response && response.user) {
+                    localStorage.setItem('currentUser', JSON.stringify(response.user));
+                    this.currentUserSubject.next(response.user);
+                }
             })
         );
     }

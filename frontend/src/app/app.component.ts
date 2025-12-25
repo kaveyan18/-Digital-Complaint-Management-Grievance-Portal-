@@ -9,7 +9,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Digital Complaint Management Portal';
+  title = 'ResolveDesk';
   isMobileMenuOpen = false;
 
   constructor(

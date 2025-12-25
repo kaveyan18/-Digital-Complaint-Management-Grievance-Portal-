@@ -5,17 +5,23 @@
         <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
       <a (click)="navigateToDashboard()" class="logo" style="cursor: pointer;">
-        <mat-icon style="margin-right: 0.5rem;">security</mat-icon>
-        <span>EazzGrievance</span>
+        <mat-icon style="margin-right: 0.5rem; color: var(--accent-color);">security</mat-icon>
+        <span class="logo-text">ResolveDesk</span>
       </a>
     </div>
 
     <div class="nav-links" [class.active]="isMobileMenuOpen">
+      <!-- Common Links -->
+      <a routerLink="/" class="nav-item">Home</a>
+
       <ng-container *ngIf="!authService.isLoggedIn">
-        <a routerLink="/login" class="btn btn-outline nav-item" style="border: none;">Login</a>
-        <a routerLink="/register" class="btn btn-primary nav-item">Register</a>
+        <a routerLink="/register" class="nav-item">Register / Login</a>
       </ng-container>
 
+      <a routerLink="/complaints" class="nav-item">Track Complaint</a>
+      <a href="javascript:void(0)" class="nav-item">Contact / Help</a>
+
+      <!-- Authenticated User Menu -->
       <ng-container *ngIf="authService.isLoggedIn">
         <button mat-button [matMenuTriggerFor]="userMenu" class="btn btn-outline nav-item user-btn"
           style="border: none; display: flex; align-items: center; gap: 0.5rem;">
@@ -35,6 +41,9 @@
           </button>
         </mat-menu>
       </ng-container>
+
+      <!-- CTA Button -->
+      <a routerLink="/complaints/new" class="btn btn-primary" style="margin-left: 0.5rem;">Raise a Complaint</a>
     </div>
   </div>
 </header>
@@ -45,11 +54,30 @@
 
 <footer class="footer">
   <div class="container footer-content">
-    <p style="margin: 0; font-size: 0.9rem;">&copy; 2025 EazzGrievance. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="javascript:void(0)">Privacy Policy</a>
-      <a href="javascript:void(0)">Terms of Service</a>
-      <a href="javascript:void(0)">Contact Support</a>
+    <div class="footer-brand">
+      <h3 style="margin-bottom: 0.5rem;">ResolveDesk</h3>
+      <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+        Centralized grievance redressal system for faster and accountable resolutions.
+      </p>
     </div>
+
+    <div class="footer-links-group">
+      <h4>Quick Links</h4>
+      <a routerLink="/">Home</a>
+      <a routerLink="/register">Register</a>
+      <a routerLink="/login">Login</a>
+    </div>
+
+    <div class="footer-info">
+      <h4>Contact Us</h4>
+      <p style="margin: 0; font-size: 0.9rem;">
+        <mat-icon
+          style="font-size: 1rem; height: 1rem; width: 1rem; vertical-align: middle; margin-right: 0.25rem;">email</mat-icon>
+        support&#64;grievanceportal.com
+      </p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ResolveDesk. All rights reserved.</p>
   </div>
 </footer>

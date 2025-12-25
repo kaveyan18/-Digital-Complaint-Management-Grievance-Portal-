@@ -1,55 +1,166 @@
-<div class="hero-section">
-    <div class="container hero-content">
-        <h1 class="hero-title">Your Voice, Our Priority</h1>
-        <p class="hero-subtitle">Experience the fastest and most transparent grievance redressal system. Submit, Track,
-            and Resolve your complaints with ease.</p>
-        <div class="hero-actions">
-            <a routerLink="/login" class="btn btn-primary btn-lg">Lodge Complaint</a>
-            <a routerLink="/register" class="btn btn-outline btn-lg" style="color: white; border-color: white;">Register
-                Now</a>
+<div class="home-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-bg-pattern"></div>
+        <div class="container hero-content">
+            <h1 class="hero-title">A Simple, Transparent, and Efficient Way to Raise and Track Complaints</h1>
+            <p class="hero-subtitle">Submit complaints, monitor progress in real time, and ensure faster resolution
+                through a centralized grievance management system.</p>
+            <div class="hero-actions">
+                <a routerLink="/register" class="btn btn-primary btn-lg">Register / Login</a>
+                <a routerLink="/complaints/new" class="btn btn-outline btn-lg"
+                    style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;">Raise
+                    a Complaint</a>
+            </div>
         </div>
     </div>
-    <div class="hero-overlay"></div>
+
+    <!-- About Section with Stats -->
+    <section class="about-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why This Portal?</h2>
+                <p>Ensuring accountability by allowing users, staff, and administrators to manage, track, and resolve
+                    complaints efficiently.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">1+</span>
+                    <span class="stat-label">Total Complaints</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2+</span>
+                    <span class="stat-label">Resolved</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24h</span>
+                    <span class="stat-label">Avg. Resolution</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5+</span>
+                    <span class="stat-label">Active Staff</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>A seamless process from submission to resolution.</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3>Register & Login</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Create your account to get started.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3>Submit Details</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Provide complaint details and attachments.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3>Assign Staff</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Complaint is assigned to relevant staff.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h3>Track Status</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Get real-time updates on progress.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">5</div>
+                    <h3>Resolution</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Issue resolved and ticket closed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Features for Modern Grievance Management</h2>
+                <p>Everything you need to manage, track, and resolve complaints efficiently with cutting-edge
+                    technology.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Card 1 -->
+                <div class="feature-card" style="animation-delay: 0.1s">
+                    <div class="feature-icon icon-orange">
+                        <mat-icon>bolt</mat-icon>
+                    </div>
+                    <h3>Lightning Fast Processing</h3>
+                    <p>AI-powered system categorizes and routes complaints instantly to the right department for swift
+                        resolution.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon icon-blue">
+                        <mat-icon>security</mat-icon>
+                    </div>
+                    <h3>Secure & Confidential</h3>
+                    <p>End-to-end encryption ensures your sensitive information remains private and protected at all
+                        times.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple">
+                        <mat-icon>notifications_active</mat-icon>
+                    </div>
+                    <h3>Real-time Notifications</h3>
+                    <p>Stay updated with instant alerts via email, SMS, and push notifications at every step of the
+                        process.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon icon-green">
+                        <mat-icon>analytics</mat-icon>
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Gain insights into complaint trends and resolution times with comprehensive graphical reports and
+                        dashboards.</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="feature-card">
+                    <div class="feature-icon icon-red">
+                        <mat-icon>lock</mat-icon>
+                    </div>
+                    <h3>Data Privacy</h3>
+                    <p>Strict data privacy controls to ensure that your personal information is accessible only to
+                        authorized personnel.</p>
+                </div>
+                <!-- Card 6 -->
+                <div class="feature-card">
+                    <div class="feature-icon icon-indigo">
+                        <mat-icon>schedule</mat-icon>
+                    </div>
+                    <h3>24/7 Availability</h3>
+                    <p>Submit and track your grievances anytime, anywhere, with our round-the-clock available portal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section><!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-container">
+            <h2>Have an Issue? Let Us Know.</h2>
+            <p>Don't let grievances go unheard. Resolve them today.</p>
+            <div class="hero-actions">
+                <a routerLink="/complaints/new" class="btn btn-primary btn-lg"
+                    style="background: white; color: var(--accent-color);">Raise a Complaint</a>
+                <a routerLink="/register" class="btn btn-outline btn-lg"
+                    style="border-color: white; color: white;">Register Now</a>
+            </div>
+        </div>
+    </section>
 </div>
-
-<section class="features-section container">
-    <div class="text-center mb-5">
-        <h2>Why Choose EazzGrievance?</h2>
-        <p>A smart portal designed for efficiency and transparency.</p>
-    </div>
-
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="icon-wrapper">
-                <mat-icon>touch_app</mat-icon>
-            </div>
-            <h3>Easy Lodging</h3>
-            <p>Submit your complaints in just a few clicks. Upload documents and get instant acknowledgment.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="icon-wrapper">
-                <mat-icon>track_changes</mat-icon>
-            </div>
-            <h3>Real-Time Tracking</h3>
-            <p>Stay updated with the live status of your grievance. Receive notifications on every action taken.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="icon-wrapper">
-                <mat-icon>verified_user</mat-icon>
-            </div>
-            <h3>Secure & Private</h3>
-            <p>Your data is encrypted and safe. We ensure complete privacy for all your submissions.</p>
-        </div>
-    </div>
-</section>
-
-<section class="cta-section">
-    <div class="container text-center">
-        <h2>Ready to get your issue resolved?</h2>
-        <p>Join thousands of satisfied users who trust EazzGrievance.</p>
-        <a routerLink="/login" class="btn btn-primary btn-lg" style="background: white; color: var(--accent-color);">Get
-            Started</a>
-    </div>
-</section>
