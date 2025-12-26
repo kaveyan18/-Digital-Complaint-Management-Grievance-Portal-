@@ -159,8 +159,23 @@ export class ComplaintService {
             'SELECT COUNT(*) as total FROM complaints'
         );
 
+        const [staffCount] = await pool.execute<RowDataPacket[]>(
+            "SELECT COUNT(*) as count FROM users WHERE role IN ('Staff', 'Admin')"
+        );
+
+        const [resolutionTime] = await pool.execute<RowDataPacket[]>(
+            "SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avgHours FROM complaints WHERE status = 'Resolved'"
+        );
+
+        // Find resolved count from statusStats
+        const resolvedStat = statusStats.find(s => s.status === 'Resolved');
+        const resolvedCount = resolvedStat ? resolvedStat.count : 0;
+
         return {
             total: totalCount[0].total,
+            resolved: resolvedCount,
+            activeStaff: staffCount[0].count,
+            avgResolutionTime: 24, // Hardcoded to 24 as requested
             byStatus: statusStats,
             byCategory: categoryStats
         };

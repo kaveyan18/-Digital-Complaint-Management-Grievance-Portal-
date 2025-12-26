@@ -26,20 +26,20 @@
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-number">1+</span>
+                    <span class="stat-number">{{stats?.total || 0}}</span>
                     <span class="stat-label">Total Complaints</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">2+</span>
+                    <span class="stat-number">{{stats?.resolved || 0}}</span>
                     <span class="stat-label">Resolved</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">24h</span>
+                    <span class="stat-number">{{stats?.avgResolutionTime || 24}}h</span>
                     <span class="stat-label">Avg. Resolution</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">5+</span>
-                    <span class="stat-label">Active Staff</span>
+                    <span class="stat-number">{{stats?.activeStaff || 0}}</span>
+                    <span class="stat-label">Total Staff</span>
                 </div>
             </div>
         </div>

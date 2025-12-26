@@ -1,13 +1,69 @@
 <div class="complaint-list-container">
     <div class="header-section">
         <div class="header-text">
-            <h1>My Complaints</h1>
+            <h1 class="welcome-msg" *ngIf="currentUser">Welcome, {{currentUser.name}}</h1>
             <p class="subtitle">Manage and track the status of your grievances efficiently.</p>
         </div>
         <button class="btn btn-primary" routerLink="/complaints/new">
             <mat-icon style="margin-right: 0.5rem">add</mat-icon>
             New Complaint
         </button>
+    </div>
+
+    <!-- Summary Stats Cards -->
+    <div class="stats-grid" *ngIf="!loading && complaints.length > 0">
+        <div class="stat-card total">
+            <div class="stat-icon-bg">
+                <mat-icon>assignment</mat-icon>
+            </div>
+            <div class="stat-info">
+                <h3>Total Raised</h3>
+                <p class="stat-number">{{stats.total}}</p>
+            </div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-icon-bg">
+                <mat-icon>pending_actions</mat-icon>
+            </div>
+            <div class="stat-info">
+                <h3>Open / In-Progress</h3>
+                <p class="stat-number">{{stats.pending}}</p>
+            </div>
+        </div>
+        <div class="stat-card resolved">
+            <div class="stat-icon-bg">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-info">
+                <h3>Resolved</h3>
+                <p class="stat-number">{{stats.resolved}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-container" *ngIf="!loading && complaints.length > 0">
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (selectionChange)="onFilterChange()">
+                <mat-option value="all">All Statuses</mat-option>
+                <mat-option value="Open">Open</mat-option>
+                <mat-option value="Assigned">Assigned</mat-option>
+                <mat-option value="In-progress">In-progress</mat-option>
+                <mat-option value="Resolved">Resolved</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onFilterChange()">
+                <mat-option value="all">All Categories</mat-option>
+                <mat-option value="plumbing">Plumbing</mat-option>
+                <mat-option value="electrical">Electrical</mat-option>
+                <mat-option value="facility">Facility</mat-option>
+                <mat-option value="other">Other</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 
     <!-- Loading Spinner -->
@@ -32,8 +88,8 @@
     </div>
 
     <!-- Complaints Table -->
-    <div class="card table-card" *ngIf="!loading && complaints.length > 0">
-        <table mat-table [dataSource]="complaints" class="full-width">
+    <div class="card table-card" *ngIf="!loading && filteredComplaints.length > 0">
+        <table mat-table [dataSource]="filteredComplaints" class="full-width">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>Details</th>

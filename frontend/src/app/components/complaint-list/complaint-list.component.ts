@@ -11,17 +11,32 @@ import { Complaint } from '../../models/complaint.model';
 })
 export class ComplaintListComponent implements OnInit {
     complaints: Complaint[] = [];
+    filteredComplaints: Complaint[] = [];
     loading = true;
     errorMessage = '';
     displayedColumns = ['id', 'title', 'category', 'status', 'created_at', 'actions'];
 
+    // Filter values
+    selectedStatus = 'all';
+    selectedCategory = 'all';
+
+    // Stats
+    stats = {
+        total: 0,
+        pending: 0,
+        resolved: 0
+    };
+
+    currentUser: any;
+
     constructor(
         private complaintService: ComplaintService,
-        private authService: AuthService,
+        public authService: AuthService,
         private router: Router
     ) { }
 
     ngOnInit(): void {
+        this.currentUser = this.authService.currentUser;
         this.loadComplaints();
     }
 
@@ -42,6 +57,8 @@ export class ComplaintListComponent implements OnInit {
         this.complaintService.getComplaints(params).subscribe({
             next: (response) => {
                 this.complaints = response.complaints;
+                this.applyFilters();
+                this.calculateStats();
                 this.loading = false;
             },
             error: (error) => {
@@ -49,6 +66,24 @@ export class ComplaintListComponent implements OnInit {
                 this.errorMessage = error.error?.message || 'Failed to load complaints';
             }
         });
+    }
+
+    calculateStats(): void {
+        this.stats.total = this.complaints.length;
+        this.stats.pending = this.complaints.filter(c => c.status !== 'Resolved').length;
+        this.stats.resolved = this.complaints.filter(c => c.status === 'Resolved').length;
+    }
+
+    applyFilters(): void {
+        this.filteredComplaints = this.complaints.filter(c => {
+            const statusMatch = this.selectedStatus === 'all' || c.status === this.selectedStatus;
+            const categoryMatch = this.selectedCategory === 'all' || c.category === this.selectedCategory;
+            return statusMatch && categoryMatch;
+        });
+    }
+
+    onFilterChange(): void {
+        this.applyFilters();
     }
 
     viewComplaint(id: number): void {

@@ -33,6 +33,9 @@ export interface ComplaintUpdate {
 
 export interface ComplaintStats {
     total: number;
+    resolved: number;
+    activeStaff: number;
+    avgResolutionTime: number;
     byStatus: { status: string; count: number }[];
     byCategory: { category: string; count: number }[];
 }

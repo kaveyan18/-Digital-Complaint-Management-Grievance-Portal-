@@ -16,16 +16,109 @@
     padding: 0 1rem;
 }
 
-.header-text h1 {
-    font-size: 2rem;
+.header-text h1.welcome-msg {
+    font-size: 2.2rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin: 0;
+    font-weight: 400;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon-bg {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon-bg mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: white;
+}
+
+.stat-info h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+/* Card Specific Colors */
+.stat-card.total .stat-icon-bg {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.stat-card.pending .stat-icon-bg {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-card.resolved .stat-icon-bg {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Filters Section */
+.filters-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-field {
+    width: 220px;
+}
+
+::ng-deep .filter-field .mat-mdc-text-field-wrapper {
+    background-color: white !important;
 }
 
 /* Table Card */
