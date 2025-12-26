@@ -9,7 +9,7 @@
         <div class="search-box">
             <mat-form-field appearance="outline" class="id-input">
                 <mat-label>Complaint ID</mat-label>
-                <input matInput type="number" [(ngModel)]="complaintId" placeholder="Enter Complaint ID"
+                <input matInput type="text" [(ngModel)]="complaintId" placeholder="e.g. CMP-2025-ABCD12"
                     (keyup.enter)="trackComplaint()">
                 <mat-icon matPrefix>search</mat-icon>
             </mat-form-field>
@@ -27,7 +27,7 @@
                 <div mat-card-avatar class="status-avatar" [ngClass]="complaint.status.toLowerCase()">
                     <mat-icon>{{getCategoryIcon(complaint.category)}}</mat-icon>
                 </div>
-                <mat-card-title>Complaint #{{complaint.id}}</mat-card-title>
+                <mat-card-title>{{complaint.complaint_unique_id || ('#' + complaint.id)}}</mat-card-title>
                 <mat-card-subtitle>{{complaint.title}}</mat-card-subtitle>
             </mat-card-header>
 

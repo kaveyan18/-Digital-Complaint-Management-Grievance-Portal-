@@ -23,7 +23,7 @@
       <!-- Resident / Student Links -->
       <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'User'">
         <a routerLink="/" class="nav-item">Home</a>
-        <a routerLink="/complaints" class="nav-item">Track Complaint</a>
+        <a routerLink="/track-complaint" class="nav-item">Track Complaint</a>
         <a routerLink="/complaints/new" class="nav-item">Raise a Complaint</a>
       </ng-container>
 

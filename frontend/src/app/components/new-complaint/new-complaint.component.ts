@@ -59,10 +59,11 @@ export class NewComplaintComponent {
         this.complaintService.createComplaint(complaintData).subscribe({
             next: (response) => {
                 this.loading = false;
-                this.successMessage = response.message;
+                const trackingId = response.complaint.complaint_unique_id || response.complaint.id;
+                this.successMessage = `Complaint submitted successfully! Your Tracking ID is: ${trackingId}`;
                 setTimeout(() => {
                     this.router.navigate(['/complaints']);
-                }, 1500);
+                }, 3000);
             },
             error: (error) => {
                 this.loading = false;

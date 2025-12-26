@@ -5,13 +5,17 @@ import {
     getComplaintById,
     updateComplaint,
     deleteComplaint,
-    getComplaintStats
+    getComplaintStats,
+    trackComplaint
 } from '../controllers/complaintController';
 
 const router = Router();
 
 // GET /api/complaints/stats - Get complaint statistics (optional - admin)
 router.get('/stats', getComplaintStats);
+
+// GET /api/complaints/track/:uniqueId - Track complaint by unique ID
+router.get('/track/:uniqueId', trackComplaint);
 
 // POST /api/complaints - Create new complaint
 router.post('/', createComplaint);

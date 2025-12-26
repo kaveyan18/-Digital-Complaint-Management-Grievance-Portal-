@@ -42,8 +42,19 @@ mat-card-title {
 }
 
 .complaint-id {
-    color: #666;
-    font-weight: normal;
+    color: #475569;
+    font-weight: 500;
+    font-family: monospace;
+    background: #f1f5f9;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.title-separator {
+    color: #CBD5E1;
+    margin: 0 0.5rem;
+    font-weight: 300;
 }
 
 .status-badge {

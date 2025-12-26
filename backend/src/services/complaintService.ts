@@ -2,14 +2,16 @@ import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import pool from '../config/database';
 import { ComplaintCreate, ComplaintUpdate, Complaint } from '../models/Complaint';
 import { AppError } from '../utils/AppError';
+import { generateComplaintId } from '../utils/idGenerator';
 
 export class ComplaintService {
     async createComplaint(complaintData: ComplaintCreate): Promise<Complaint> {
         const { user_id, title, description, category, attachments } = complaintData;
+        const complaint_unique_id = generateComplaintId();
 
         const [result] = await pool.execute<ResultSetHeader>(
-            'INSERT INTO complaints (user_id, title, description, category, attachments, status) VALUES (?, ?, ?, ?, ?, ?)',
-            [user_id, title, description, category, attachments || null, 'Open']
+            'INSERT INTO complaints (user_id, title, description, category, attachments, status, complaint_unique_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [user_id, title, description, category, attachments || null, 'Open', complaint_unique_id]
         );
 
         return {
@@ -20,8 +22,28 @@ export class ComplaintService {
             category,
             status: 'Open',
             attachments,
+            complaint_unique_id,
             created_at: new Date() // Approximate for response
         };
+    }
+
+    async getComplaintByUniqueId(uniqueId: string): Promise<Complaint> {
+        const [complaints] = await pool.execute<RowDataPacket[]>(
+            `SELECT c.*, 
+              u.name as user_name, u.email as user_email,
+              s.name as staff_name
+       FROM complaints c
+       LEFT JOIN users u ON c.user_id = u.id
+       LEFT JOIN users s ON c.staff_id = s.id
+       WHERE c.complaint_unique_id = ?`,
+            [uniqueId]
+        );
+
+        if (complaints.length === 0) {
+            throw new AppError('Complaint not found', 404);
+        }
+
+        return complaints[0] as Complaint;
     }
 
     async getComplaints(filters: { user_id?: string; role?: string; staff_id?: string }): Promise<Complaint[]> {

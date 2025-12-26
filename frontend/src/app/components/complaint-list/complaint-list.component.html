@@ -38,7 +38,7 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>Details</th>
                 <td mat-cell *matCellDef="let complaint">
-                    <span class="id-text">#{{complaint.id}}</span>
+                    <span class="id-text">{{complaint.complaint_unique_id || '#' + complaint.id}}</span>
                 </td>
             </ng-container>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../../services/complaint.service';
+import { AuthService } from '../../services/auth.service';
 import { Complaint } from '../../models/complaint.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -9,12 +10,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./track-complaint.component.css']
 })
 export class TrackComplaintComponent implements OnInit {
-  complaintId: number | null = null;
+  complaintId: string = '';
   complaint: Complaint | null = null;
   loading = false;
 
   constructor(
     private complaintService: ComplaintService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -22,12 +24,18 @@ export class TrackComplaintComponent implements OnInit {
   }
 
   trackComplaint(): void {
-    if (!this.complaintId) return;
+    if (!this.complaintId.trim()) return;
+
+    const user = this.authService.currentUser;
+    if (!user || user.id === undefined) {
+      this.snackBar.open('You must be logged in to track complaints.', 'Close', { duration: 3000 });
+      return;
+    }
 
     this.loading = true;
     this.complaint = null;
 
-    this.complaintService.getComplaintById(this.complaintId).subscribe({
+    this.complaintService.trackComplaint(this.complaintId.trim(), user.id).subscribe({
       next: (response) => {
         this.complaint = response.complaint;
         this.loading = false;

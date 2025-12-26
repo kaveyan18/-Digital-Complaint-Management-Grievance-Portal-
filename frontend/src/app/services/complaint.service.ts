@@ -45,6 +45,16 @@ export class ComplaintService {
         );
     }
 
+    // Track complaint by unique ID
+    trackComplaint(uniqueId: string, userId: number): Observable<{ complaint: Complaint }> {
+        let httpParams = new HttpParams().set('userId', userId.toString());
+        return this.http.get<any>(`${this.apiUrl}/track/${uniqueId}`, { params: httpParams }).pipe(
+            map(response => ({
+                complaint: response.data.complaint
+            }))
+        );
+    }
+
     // Update complaint
     updateComplaint(id: number, update: ComplaintUpdate): Observable<{ message: string; complaint: Complaint }> {
         return this.http.put<any>(`${this.apiUrl}/${id}`, update).pipe(

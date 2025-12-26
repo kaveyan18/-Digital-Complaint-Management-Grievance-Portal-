@@ -15,7 +15,8 @@
     <mat-card *ngIf="!loading && complaint" class="details-card">
         <mat-card-header>
             <mat-card-title>
-                <span class="complaint-id">#{{complaint.id}}</span>
+                <span class="complaint-id">{{complaint.complaint_unique_id || ('#' + complaint.id)}}</span>
+                <span class="title-separator">|</span>
                 {{complaint.title}}
             </mat-card-title>
             <span class="status-badge" [ngClass]="getStatusClass(complaint.status)">

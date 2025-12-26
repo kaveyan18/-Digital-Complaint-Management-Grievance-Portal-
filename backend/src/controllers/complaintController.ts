@@ -42,6 +42,27 @@ export const getComplaintById = catchAsync(async (req: Request, res: Response, n
     sendResponse(res, 200, 'Complaint details', { complaint });
 });
 
+// Track complaint by Unique ID
+export const trackComplaint = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { uniqueId } = req.params;
+    const userId = req.query.userId;
+
+    if (!userId) {
+        throw new AppError('User ID is required for verification', 400);
+    }
+
+    const complaint = await complaintService.getComplaintByUniqueId(uniqueId);
+
+    // Security check: Users can only track their own complaints
+    // We convert userId to string for comparison to be safe
+    if (String(complaint.user_id) !== String(userId)) {
+        throw new AppError('You are not authorized to view this complaint', 403);
+    }
+
+    sendResponse(res, 200, 'Complaint tracking details', { complaint });
+});
+
+
 // Update complaint (status, staff assignment, resolution notes)
 export const updateComplaint = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
