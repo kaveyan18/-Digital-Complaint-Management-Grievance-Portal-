@@ -1,71 +1,162 @@
-/* Global footer styles update */
+/* Premium Footer Styles - Compact */
 .footer {
     margin-top: auto;
-    border-top: 1px solid var(--border-color);
-    background: var(--surface-color);
-    padding: 4rem 0 1rem;
-    color: var(--text-secondary);
+    background: #0F172A;
+    /* Slate 900 */
+    color: #94A3B8;
+    /* Slate 400 */
+    padding: 2.5rem 0 1.5rem;
+    /* Reduced padding */
+    font-family: var(--font-body);
+    position: relative;
+    overflow: hidden;
 }
 
 .footer-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 2rem;
-    margin-bottom: 3rem;
+    /* Reduced gap */
+    margin-bottom: 1.5rem;
+    /* Reduced bottom margin */
+    position: relative;
+    z-index: 10;
+    padding: 0 1rem;
 }
 
-.footer-brand {
-    flex: 2;
-    min-width: 300px;
+.footer-brand h3 {
+    color: #F8FAFC;
+    /* Slate 50 */
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-brand p {
+    color: #94A3B8;
+    max-width: 300px;
+    line-height: 1.6;
 }
 
 .footer-links-group,
 .footer-info {
-    flex: 1;
-    min-width: 150px;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .footer-links-group h4,
 .footer-info h4 {
-    color: var(--primary-color);
+    color: #F8FAFC;
     font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
 }
 
 .footer-links-group a {
-    color: var(--text-secondary);
+    color: #94A3B8;
     text-decoration: none;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .footer-links-group a:hover {
-    color: var(--accent-color);
+    color: #3B82F6;
+    /* Blue 500 */
+    transform: translateX(4px);
+}
+
+.footer-info p {
+    color: #94A3B8;
+    /* 30% Secondary Color */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.footer-contact-link {
+    color: #CBD5E1;
+    /* Lighter text for contrast */
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    position: relative;
+    transition: all 0.3s ease;
+    background-image: linear-gradient(to right, #3B82F6, #3B82F6);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+}
+
+.footer-contact-link:hover {
+    color: #3B82F6;
+    /* 10% Accent Color */
+    background-size: 100% 1px;
+    padding-left: 0.25rem;
+}
+
+.footer-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    /* Subtle 30% variation */
+    border-radius: 50%;
+    color: #3B82F6;
+    transition: all 0.3s ease;
+}
+
+.footer-info p:hover .footer-icon-wrapper {
+    background: rgba(59, 130, 246, 0.15);
+    transform: scale(1.1);
+}
+
+/* Snackbar Styles */
+.success-snackbar {
+    --mdc-snackbar-container-color: #10B981;
+    --mat-snack-bar-button-color: #ffffff;
+}
+
+.error-snackbar {
+    --mdc-snackbar-container-color: #EF4444;
+    --mat-snack-bar-button-color: #ffffff;
+}
+
+.info-snackbar {
+    --mdc-snackbar-container-color: #3B82F6;
+    --mat-snack-bar-button-color: #ffffff;
 }
 
 .footer-bottom {
+    border-top: 1px solid #1E293B;
+    /* Slate 800 */
+    padding-top: 2rem;
     text-align: center;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    color: #64748B;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
-/* Navbar logo text adjustment */
-.logo-text {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--primary-color);
-    white-space: nowrap;
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-@media (max-width: 768px) {
-    .logo-text {
-        font-size: 1.1rem;
-        white-space: normal;
-        line-height: 1.2;
+@media (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer {
+        padding: 3rem 0 1.5rem;
     }
 }

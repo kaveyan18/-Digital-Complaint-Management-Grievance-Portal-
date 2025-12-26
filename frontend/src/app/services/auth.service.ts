@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { User, UserRegistration, UserLogin, AuthResponse } from '../models/user.model';
 
 @Injectable({
@@ -26,11 +26,24 @@ export class AuthService {
     }
 
     register(userData: UserRegistration): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData);
+        return this.http.post<any>(`${this.apiUrl}/register`, userData).pipe(
+            map(response => {
+                return {
+                    message: response.message,
+                    user: response.data.user
+                };
+            })
+        );
     }
 
     login(credentials: UserLogin): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+        return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+            map(response => {
+                return {
+                    message: response.message,
+                    user: response.data.user
+                };
+            }),
             tap(response => {
                 if (response && response.user) {
                     localStorage.setItem('currentUser', JSON.stringify(response.user));
@@ -58,6 +71,8 @@ export class AuthService {
     }
 
     getStaffMembers(): Observable<{ staff: User[] }> {
-        return this.http.get<{ staff: User[] }>(`${this.apiUrl}/staff`);
+        return this.http.get<any>(`${this.apiUrl}/staff`).pipe(
+            map(response => response.data)
+        );
     }
 }

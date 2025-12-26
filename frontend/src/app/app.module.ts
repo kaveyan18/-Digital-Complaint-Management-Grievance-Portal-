@@ -17,6 +17,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +32,10 @@ import { ComplaintDetailsComponent } from './components/complaint-details/compla
 import { StaffDashboardComponent } from './components/staff-dashboard/staff-dashboard.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
+import { ResolutionDialogComponent } from './components/resolution-dialog/resolution-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +47,9 @@ import { HomeComponent } from './components/home/home.component';
     ComplaintDetailsComponent,
     StaffDashboardComponent,
     AdminDashboardComponent,
-    HomeComponent
+    HomeComponent,
+    ResolutionDialogComponent,
+    TrackComplaintComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +70,11 @@ import { HomeComponent } from './components/home/home.component';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

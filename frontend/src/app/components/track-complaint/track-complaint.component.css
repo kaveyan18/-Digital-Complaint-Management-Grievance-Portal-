@@ -1,0 +1,206 @@
+.track-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+}
+
+.search-card {
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.search-box {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.id-input {
+    flex: 1;
+}
+
+.search-box button {
+    height: 56px;
+    /* Match standard mat-form-field height */
+    margin-top: 4px;
+    /* Slight alignment fix if needed */
+}
+
+/* Status Card */
+.status-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.status-avatar.open {
+    background-color: #E2E8F0;
+    color: #475569;
+}
+
+.status-avatar.assigned {
+    background-color: #FEF3C7;
+    color: #D97706;
+}
+
+.status-avatar.in-progress {
+    background-color: #DBEAFE;
+    color: #DC2626;
+}
+
+/* Wait, in-progress usually blue/orange. Fixing color: blue */
+.status-avatar.in-progress {
+    background-color: #DBEAFE;
+    color: #2563EB;
+}
+
+.status-avatar.resolved {
+    background-color: #D1FAE5;
+    color: #059669;
+}
+
+.stepper-content {
+    padding: 2rem;
+}
+
+/* Custom Stepper Styles */
+.stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Align top so labels don't mess up circles */
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    position: relative;
+    width: 80px;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #E2E8F0;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.step-line {
+    flex: 1;
+    height: 2px;
+    background: #E2E8F0;
+    margin-top: 20px;
+    /* Center with circle (40px height / 2) */
+    transform: translateY(-50%);
+    position: relative;
+    z-index: 1;
+    margin-left: -20px;
+    /* Connect to circle center */
+    margin-right: -20px;
+}
+
+/* Active/Completed States */
+.step-item.completed .step-circle {
+    background: #10B981;
+    color: white;
+}
+
+.step-item.completed .step-label {
+    color: #10B981;
+}
+
+.step-line.completed {
+    background: #10B981;
+}
+
+.step-item.active .step-circle {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.step-item.active .step-label {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    background: #F8FAFC;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.detail-item p {
+    color: var(--text-primary);
+    font-weight: 500;
+    margin: 0;
+}
+
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.notes-text {
+    white-space: pre-wrap;
+    background: white;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .step-label {
+        font-size: 0.7rem;
+    }
+}

@@ -2,6 +2,8 @@
     padding: 30px;
     max-width: 900px;
     margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .loading-container {
@@ -166,7 +168,23 @@ mat-card-title {
     background: #4caf50;
 }
 
-mat-card-actions {
+mat-card-actions.action-buttons {
     padding-top: 20px;
     border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.status-update-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.status-update-section mat-form-field {
+    margin-bottom: -1.25em;
+    /* Fix Material bottom margin */
+    width: 200px;
 }

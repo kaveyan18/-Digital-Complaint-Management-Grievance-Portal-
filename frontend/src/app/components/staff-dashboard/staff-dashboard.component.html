@@ -7,6 +7,47 @@
         <p class="subtitle">Manage your assigned complaints</p>
     </div>
 
+    <!-- Stats Summary -->
+    <div class="stats-grid" *ngIf="!loading">
+        <!-- ... existing stats cards ... -->
+        <div class="stat-card total-card">
+            <div class="stat-icon">
+                <mat-icon>assignment</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{totalAssigned}}</span>
+                <span class="stat-label">Total Assigned</span>
+            </div>
+        </div>
+        <div class="stat-card pending-card">
+            <div class="stat-icon">
+                <mat-icon>pending_actions</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{pendingCount}}</span>
+                <span class="stat-label">Open / Assigned</span>
+            </div>
+        </div>
+        <div class="stat-card progress-card">
+            <div class="stat-icon">
+                <mat-icon>trending_up</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{inProgressCount}}</span>
+                <span class="stat-label">In Progress</span>
+            </div>
+        </div>
+        <div class="stat-card resolved-card">
+            <div class="stat-icon">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{resolvedCount}}</span>
+                <span class="stat-label">Resolved</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Messages -->
     <div class="message success-message" *ngIf="successMessage">
         <mat-icon>check_circle</mat-icon>
@@ -23,76 +64,95 @@
         <p>Loading assigned complaints...</p>
     </div>
 
-    <!-- No Complaints -->
-    <div class="no-complaints" *ngIf="!loading && complaints.length === 0">
+    <!-- No Complaints (Only if empty and not loading) -->
+    <div class="no-complaints" *ngIf="!loading && dataSource.data.length === 0">
         <mat-icon>inbox</mat-icon>
         <h2>No assigned complaints</h2>
         <p>You currently have no complaints assigned to you.</p>
     </div>
 
-    <!-- Complaints Table -->
-    <mat-card *ngIf="!loading && complaints.length > 0">
-        <table mat-table [dataSource]="complaints" class="full-width">
-            <!-- ID Column -->
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let complaint">#{{complaint.id}}</td>
-            </ng-container>
+    <!-- Filter & Table Section -->
+    <div *ngIf="!loading && dataSource.data.length > 0">
+        <div class="filter-section">
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Filter by Status</mat-label>
+                <mat-select [(value)]="filterStatus" (selectionChange)="applyStatusFilter()">
+                    <mat-option value="All">All Statuses</mat-option>
+                    <mat-option *ngFor="let status of statusOptions" [value]="status">
+                        {{status}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-            <!-- Title Column -->
-            <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef>Title</th>
-                <td mat-cell *matCellDef="let complaint">{{complaint.title}}</td>
-            </ng-container>
+        <mat-card class="table-card">
+            <table mat-table [dataSource]="dataSource" matSort class="full-width">
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let complaint">#{{complaint.id}}</td>
+                </ng-container>
 
-            <!-- Category Column -->
-            <ng-container matColumnDef="category">
-                <th mat-header-cell *matHeaderCellDef>Category</th>
-                <td mat-cell *matCellDef="let complaint">{{complaint.category | titlecase}}</td>
-            </ng-container>
+                <!-- Title Column -->
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                    <td mat-cell *matCellDef="let complaint">{{complaint.title}}</td>
+                </ng-container>
 
-            <!-- Submitted By Column -->
-            <ng-container matColumnDef="user_name">
-                <th mat-header-cell *matHeaderCellDef>Submitted By</th>
-                <td mat-cell *matCellDef="let complaint">{{complaint.user_name || 'Unknown'}}</td>
-            </ng-container>
+                <!-- Category Column -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+                    <td mat-cell *matCellDef="let complaint">{{complaint.category | titlecase}}</td>
+                </ng-container>
 
-            <!-- Status Column -->
-            <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
-                <td mat-cell *matCellDef="let complaint">
-                    <mat-select [value]="complaint.status" (selectionChange)="updateStatus(complaint, $event.value)"
-                        class="status-select" [ngClass]="getStatusClass(complaint.status)">
-                        <mat-option *ngFor="let status of statusOptions" [value]="status">
-                            {{status}}
-                        </mat-option>
-                    </mat-select>
-                </td>
-            </ng-container>
+                <!-- Submitted By Column -->
+                <ng-container matColumnDef="user_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Submitted By</th>
+                    <td mat-cell *matCellDef="let complaint">{{complaint.user_name || 'Unknown'}}</td>
+                </ng-container>
 
-            <!-- Date Column -->
-            <ng-container matColumnDef="created_at">
-                <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let complaint">{{complaint.created_at | date:'shortDate'}}</td>
-            </ng-container>
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                    <td mat-cell *matCellDef="let complaint">
+                        <mat-select [value]="complaint.status" (selectionChange)="updateStatus(complaint, $event.value)"
+                            class="status-select" [ngClass]="getStatusClass(complaint.status)"
+                            (click)="$event.stopPropagation()">
+                            <mat-option *ngFor="let status of statusOptions" [value]="status"
+                                [disabled]="!isTransitionValid(complaint.status, status)">
+                                {{status}}
+                            </mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
 
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let complaint">
-                    <button mat-icon-button color="primary" (click)="viewDetails(complaint.id)"
-                        matTooltip="View Details">
-                        <mat-icon>visibility</mat-icon>
-                    </button>
-                    <button mat-icon-button color="accent" (click)="addResolutionNote(complaint)"
-                        matTooltip="Add Notes">
-                        <mat-icon>note_add</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
+                <!-- Date Column -->
+                <ng-container matColumnDef="created_at">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                    <td mat-cell *matCellDef="let complaint">{{complaint.created_at | date:'shortDate'}}</td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </mat-card>
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let complaint">
+                        <button mat-icon-button color="primary" (click)="viewDetails(complaint.id)"
+                            matTooltip="View Details">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" (click)="openResolutionDialog(complaint)"
+                            matTooltip="Add Notes">
+                            <mat-icon>note_add</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of complaints">
+            </mat-paginator>
+        </mat-card>
+    </div>
 </div>

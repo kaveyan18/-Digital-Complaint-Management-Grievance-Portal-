@@ -1,0 +1,47 @@
+.full-width {
+    width: 100%;
+}
+
+.resolution-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+.previous-history {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.previous-history h3 {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.history-content {
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #cbd5e1;
+}
+
+pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #334155;
+    margin: 0;
+}
+
+textarea {
+    resize: vertical;
+}

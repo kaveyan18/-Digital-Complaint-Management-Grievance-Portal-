@@ -1,0 +1,86 @@
+<div class="track-container">
+    <div class="header-section">
+        <h1 class="page-title">Track Complaint</h1>
+        <p class="subtitle">View the progress and updates of your registered complaints</p>
+    </div>
+
+    <!-- Search Section -->
+    <mat-card class="search-card">
+        <div class="search-box">
+            <mat-form-field appearance="outline" class="id-input">
+                <mat-label>Complaint ID</mat-label>
+                <input matInput type="number" [(ngModel)]="complaintId" placeholder="Enter Complaint ID"
+                    (keyup.enter)="trackComplaint()">
+                <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="!complaintId || loading" (click)="trackComplaint()">
+                <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                <span *ngIf="!loading">Track</span>
+            </button>
+        </div>
+    </mat-card>
+
+    <!-- Results Section -->
+    <div class="results-area" *ngIf="complaint">
+        <mat-card class="status-card">
+            <mat-card-header>
+                <div mat-card-avatar class="status-avatar" [ngClass]="complaint.status.toLowerCase()">
+                    <mat-icon>{{getCategoryIcon(complaint.category)}}</mat-icon>
+                </div>
+                <mat-card-title>Complaint #{{complaint.id}}</mat-card-title>
+                <mat-card-subtitle>{{complaint.title}}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="stepper-content">
+                <!-- Status Stepper -->
+                <div class="stepper-wrapper">
+                    <div class="step-item" [class.completed]="getStepIndex(complaint.status) >= 0"
+                        [class.active]="complaint.status === 'Open'">
+                        <div class="step-circle"><mat-icon>radio_button_checked</mat-icon></div>
+                        <div class="step-label">Open</div>
+                    </div>
+                    <div class="step-line" [class.completed]="getStepIndex(complaint.status) >= 1"></div>
+
+                    <div class="step-item" [class.completed]="getStepIndex(complaint.status) >= 1"
+                        [class.active]="complaint.status === 'Assigned'">
+                        <div class="step-circle"><mat-icon>engineering</mat-icon></div>
+                        <div class="step-label">Assigned</div>
+                    </div>
+                    <div class="step-line" [class.completed]="getStepIndex(complaint.status) >= 2"></div>
+
+                    <div class="step-item" [class.completed]="getStepIndex(complaint.status) >= 2"
+                        [class.active]="complaint.status === 'In-progress'">
+                        <div class="step-circle"><mat-icon>build</mat-icon></div>
+                        <div class="step-label">In Progress</div>
+                    </div>
+                    <div class="step-line" [class.completed]="getStepIndex(complaint.status) >= 3"></div>
+
+                    <div class="step-item" [class.completed]="getStepIndex(complaint.status) >= 3"
+                        [class.active]="complaint.status === 'Resolved'">
+                        <div class="step-circle"><mat-icon>check_circle</mat-icon></div>
+                        <div class="step-label">Resolved</div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>Category</label>
+                        <p>{{complaint.category | titlecase}}</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Submitted On</label>
+                        <p>{{complaint.created_at | date:'medium'}}</p>
+                    </div>
+                    <div class="detail-item full-width">
+                        <label>Description</label>
+                        <p>{{complaint.description}}</p>
+                    </div>
+                    <div class="detail-item full-width" *ngIf="complaint.resolution_notes">
+                        <label>Updates / Resolution Notes</label>
+                        <p class="notes-text">{{complaint.resolution_notes}}</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -125,11 +125,28 @@
             </div>
         </mat-card-content>
 
-        <mat-card-actions>
+        <mat-card-actions class="action-buttons">
             <button mat-button (click)="goBack()">
                 <mat-icon>arrow_back</mat-icon>
                 Back
             </button>
+
+            <!-- Status Update Section for Staff -->
+            <div class="status-update-section"
+                *ngIf="authService.userRole === 'Staff' && complaint.status !== 'Resolved'">
+                <mat-form-field appearance="outline" class="status-select">
+                    <mat-label>Update Status</mat-label>
+                    <mat-select [(value)]="selectedStatus">
+                        <mat-option *ngFor="let status of getValidStatuses()" [value]="status">
+                            {{status}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button color="primary" [disabled]="selectedStatus === complaint.status"
+                    (click)="updateStatus()">
+                    Update Status
+                </button>
+            </div>
         </mat-card-actions>
     </mat-card>
 </div>

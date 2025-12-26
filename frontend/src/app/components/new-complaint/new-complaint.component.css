@@ -4,6 +4,8 @@
     padding: 30px;
     min-height: calc(100vh - 64px);
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .complaint-card {

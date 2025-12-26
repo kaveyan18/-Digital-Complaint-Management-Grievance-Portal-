@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ComplaintService } from '../../services/complaint.service';
 import { AuthService } from '../../services/auth.service';
 import { Complaint } from '../../models/complaint.model';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
     selector: 'app-complaint-details',
@@ -14,11 +15,14 @@ export class ComplaintDetailsComponent implements OnInit {
     loading = true;
     errorMessage = '';
 
+    selectedStatus: string = '';
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private complaintService: ComplaintService,
-        public authService: AuthService
+        public authService: AuthService,
+        private notificationService: NotificationService
     ) { }
 
     ngOnInit(): void {
@@ -33,12 +37,51 @@ export class ComplaintDetailsComponent implements OnInit {
             next: (response) => {
                 this.complaint = response.complaint;
                 this.loading = false;
+                if (this.complaint) {
+                    // Initialize selectedStatus with current status or first valid option
+                    this.selectedStatus = this.complaint.status;
+                }
             },
             error: (error) => {
                 this.loading = false;
                 this.errorMessage = error.error?.message || 'Failed to load complaint details';
             }
         });
+    }
+
+    getValidStatuses(): string[] {
+        if (!this.complaint) return [];
+
+        const current = this.complaint.status;
+        const valid: string[] = [current]; // Always include current status
+
+        if (current === 'Assigned') {
+            valid.push('In-progress');
+        } else if (current === 'In-progress') {
+            valid.push('Resolved');
+        }
+
+        return valid;
+    }
+
+    updateStatus(): void {
+        if (!this.complaint || !this.selectedStatus || this.selectedStatus === this.complaint.status) return;
+
+        if (confirm(`Are you sure you want to update status to ${this.selectedStatus}?`)) {
+            const update: any = { status: this.selectedStatus };
+
+            this.complaintService.updateComplaint(this.complaint.id!, update).subscribe({
+                next: () => {
+                    if (this.complaint) {
+                        this.complaint.status = this.selectedStatus as any;
+                        this.notificationService.showSuccess('Status updated successfully');
+                    }
+                },
+                error: (error) => {
+                    this.notificationService.showError(error.error?.message || 'Failed to update status');
+                }
+            });
+        }
     }
 
     getStatusClass(status: string): string {

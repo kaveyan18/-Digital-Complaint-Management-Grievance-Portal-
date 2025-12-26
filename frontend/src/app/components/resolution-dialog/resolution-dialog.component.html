@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Add Work Notes</h2>
+
+<mat-dialog-content>
+    <div class="previous-history" *ngIf="previousNotes">
+        <h3>Previous Updates History</h3>
+        <div class="history-content">
+            <pre>{{previousNotes}}</pre>
+        </div>
+    </div>
+
+    <form [formGroup]="resolutionForm" class="resolution-form">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Work Performed</mat-label>
+            <textarea matInput formControlName="workPerformed" rows="3"
+                placeholder="Describe the work done..."></textarea>
+            <mat-error *ngIf="resolutionForm.get('workPerformed')?.hasError('required')">
+                Work performed is required
+            </mat-error>
+            <mat-error *ngIf="resolutionForm.get('workPerformed')?.hasError('minlength')">
+                Must be at least 10 characters
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Observations</mat-label>
+            <textarea matInput formControlName="observations" rows="2" placeholder="Key observations..."></textarea>
+            <mat-error *ngIf="resolutionForm.get('observations')?.hasError('required')">
+                Observations are required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Resolution Summary</mat-label>
+            <textarea matInput formControlName="resolutionSummary" rows="2"
+                placeholder="Summary of resolution..."></textarea>
+            <mat-error *ngIf="resolutionForm.get('resolutionSummary')?.hasError('required')">
+                Resolution summary is required
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!resolutionForm.valid" (click)="onSubmit()">
+        Add Note
+    </button>
+</mat-dialog-actions>

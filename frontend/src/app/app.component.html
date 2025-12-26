@@ -1,52 +1,55 @@
-<header class="navbar">
+<nav class="navbar">
   <div class="container nav-content">
-    <div class="nav-brand">
-      <button class="mobile-toggle" (click)="toggleMobileMenu()">
-        <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
-      </button>
-      <a (click)="navigateToDashboard()" class="logo" style="cursor: pointer;">
-        <mat-icon style="margin-right: 0.5rem; color: var(--accent-color);">security</mat-icon>
-        <span class="logo-text">ResolveDesk</span>
-      </a>
-    </div>
+    <a (click)="navigateToDashboard()" class="logo" style="cursor: pointer;">
+      <mat-icon style="margin-right: 0.5rem; color: var(--accent-color);">security</mat-icon>
+      ResolveDesk
+    </a>
+
+    <button class="mobile-toggle" (click)="toggleMobileMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
 
     <div class="nav-links" [class.active]="isMobileMenuOpen">
-      <!-- Common Links -->
-      <a routerLink="/" class="nav-item">Home</a>
-
+      <!-- Public Links (Not Logged In) -->
       <ng-container *ngIf="!authService.isLoggedIn">
-        <a routerLink="/register" class="nav-item">Register / Login</a>
+        <a routerLink="/" class="nav-item">Home</a>
+        <a routerLink="/" fragment="features" class="nav-item">Features</a>
+        <a routerLink="/" fragment="how-it-works" class="nav-item">How it Works</a>
+        <a routerLink="/login" class="nav-item">Track Complaint</a>
+        <a routerLink="/login" class="nav-item">Raise a Complaint</a>
+        <a routerLink="/login" class="nav-item btn btn-primary btn-sm">Login</a>
       </ng-container>
 
-      <a routerLink="/complaints" class="nav-item">Track Complaint</a>
-      <a href="javascript:void(0)" class="nav-item">Contact / Help</a>
-
-      <!-- Authenticated User Menu -->
-      <ng-container *ngIf="authService.isLoggedIn">
-        <button mat-button [matMenuTriggerFor]="userMenu" class="btn btn-outline nav-item user-btn"
-          style="border: none; display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon>account_circle</mat-icon>
-          <span class="user-name">{{authService.currentUser?.name}}</span>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <mat-menu #userMenu="matMenu" class="custom-menu">
-          <div mat-menu-item disabled style="color: var(--text-secondary); font-size: 0.9rem;">
-            Role: {{authService.currentUser?.role}}
-          </div>
-          <button mat-menu-item (click)="navigateToDashboard()">
-            <mat-icon>dashboard</mat-icon> Dashboard
-          </button>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon> Logout
-          </button>
-        </mat-menu>
+      <!-- Resident / Student Links -->
+      <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'User'">
+        <a routerLink="/" class="nav-item">Home</a>
+        <a routerLink="/complaints" class="nav-item">Track Complaint</a>
+        <a routerLink="/complaints/new" class="nav-item">Raise a Complaint</a>
       </ng-container>
 
-      <!-- CTA Button -->
-      <a routerLink="/complaints/new" class="btn btn-primary" style="margin-left: 0.5rem;">Raise a Complaint</a>
+      <!-- Staff / Technician Links -->
+      <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'Staff'">
+        <a routerLink="/" class="nav-item">Home</a>
+      </ng-container>
+
+      <!-- Admin Links -->
+      <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'Admin'">
+        <a routerLink="/" class="nav-item">Home</a>
+        <a routerLink="/admin/dashboard" class="nav-item">Admin Dashboard</a>
+      </ng-container>
+
+      <!-- User Profile & Logout (Logged In) -->
+      <div class="user-profile-nav" *ngIf="authService.isLoggedIn">
+        <span class="user-name">
+          <mat-icon
+            style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem; margin-right: 0.25rem;">account_circle</mat-icon>
+          {{authService.currentUser?.name}}
+        </span>
+        <button (click)="logout()" class="btn-logout">Logout</button>
+      </div>
     </div>
   </div>
-</header>
+</nav>
 
 <main class="main-content" style="padding-top: 0; flex: 1;">
   <router-outlet></router-outlet>
@@ -55,29 +58,46 @@
 <footer class="footer">
   <div class="container footer-content">
     <div class="footer-brand">
-      <h3 style="margin-bottom: 0.5rem;">ResolveDesk</h3>
-      <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
-        Centralized grievance redressal system for faster and accountable resolutions.
+      <h3 style="margin-bottom: 0.5rem;">
+        <mat-icon style="color: #3B82F6; margin-right: 0.5rem;">security</mat-icon> ResolveDesk
+      </h3>
+      <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; max-width: 320px;">
+        Centralized grievance redressal system empowering citizens with faster resolutions and transparent tracking.
       </p>
     </div>
 
     <div class="footer-links-group">
-      <h4>Quick Links</h4>
+      <h4>Company</h4>
       <a routerLink="/">Home</a>
-      <a routerLink="/register">Register</a>
-      <a routerLink="/login">Login</a>
+      <a routerLink="/" fragment="about">About Us</a>
+      <a routerLink="/" fragment="features">Features</a>
+    </div>
+
+    <div class="footer-links-group">
+      <h4>Support</h4>
+      <a routerLink="/complaints">Track Status</a>
+      <a routerLink="/help">Help Center</a>
+      <a routerLink="/contact">Contact Support</a>
     </div>
 
     <div class="footer-info">
-      <h4>Contact Us</h4>
-      <p style="margin: 0; font-size: 0.9rem;">
-        <mat-icon
-          style="font-size: 1rem; height: 1rem; width: 1rem; vertical-align: middle; margin-right: 0.25rem;">email</mat-icon>
-        support&#64;grievanceportal.com
+      <h4>Contact</h4>
+      <p>
+        <span class="footer-icon-wrapper">
+          <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">email</mat-icon>
+        </span>
+        <a href="mailto:support@resolvedesk.com" class="footer-contact-link">support&#64;resolvedesk.com</a>
+      </p>
+      <p>
+        <span class="footer-icon-wrapper">
+          <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">phone</mat-icon>
+        </span>
+        <a href="tel:+18001234567" class="footer-contact-link">+1 (800) 123-4567</a>
       </p>
     </div>
   </div>
-  <div class="footer-bottom">
+
+  <div class="container footer-bottom">
     <p>&copy; 2025 ResolveDesk. All rights reserved.</p>
   </div>
 </footer>

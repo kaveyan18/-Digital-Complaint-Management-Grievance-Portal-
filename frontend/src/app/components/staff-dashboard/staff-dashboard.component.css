@@ -2,6 +2,8 @@
     padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .header-section {
@@ -19,6 +21,86 @@
 .subtitle {
     color: #666;
     margin: 5px 0 0;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1F2937;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+/* Card Variations */
+.total-card .stat-icon {
+    background: #EFF6FF;
+    color: #3B82F6;
+}
+
+.pending-card .stat-icon {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.progress-card .stat-icon {
+    background: #F3E8FF;
+    color: #9333EA;
+}
+
+.resolved-card .stat-icon {
+    background: #DCFCE7;
+    color: #16A34A;
 }
 
 .message {
@@ -91,6 +173,36 @@ th.mat-header-cell {
     color: #333;
 }
 
+/* Filter Section */
+.filter-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.filter-field {
+    width: 200px;
+    font-size: 14px;
+}
+
+.table-card {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
 table {
-    box-shadow: none;
+    width: 100%;
+}
+
+th.mat-header-cell {
+    font-weight: 600;
+    color: #333;
+    font-size: 13px;
+}
+
+td.mat-cell {
+    font-size: 13px;
+    color: #4B5563;
 }

@@ -9,11 +9,12 @@ import { NewComplaintComponent } from './components/new-complaint/new-complaint.
 import { ComplaintDetailsComponent } from './components/complaint-details/complaint-details.component';
 import { StaffDashboardComponent } from './components/staff-dashboard/staff-dashboard.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { HomeComponent } from './components/home/home.component';
+import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
-import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
   // Public Routes
@@ -22,6 +23,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   // User Routes (Protected)
+  {
+    path: 'track-complaint',
+    component: TrackComplaintComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'complaints',
     component: ComplaintListComponent,
