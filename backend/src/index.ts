@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import { testConnection } from './config/database';
 import userRoutes from './routes/userRoutes';
 import complaintRoutes from './routes/complaintRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 // Initialize Express app
@@ -19,6 +20,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve uploaded files
+import path from 'path';
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Request logging
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -28,6 +33,7 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/complaints', complaintRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -67,6 +73,7 @@ const startServer = async (): Promise<void> => {
 ║  - PUT    /api/complaints/:id    (Update complaint)        ║
 ║  - DELETE /api/complaints/:id    (Delete complaint)        ║
 ║  - GET    /api/complaints/stats  (Get statistics)          ║
+║  - GET    /api/notifications/:uid(List notifications)      ║
 ╚════════════════════════════════════════════════════════════╝
       `);
         });

@@ -11,14 +11,10 @@ export class ComplaintService {
 
     constructor(private http: HttpClient) { }
 
-    // Create new complaint
-    createComplaint(complaint: ComplaintCreate): Observable<{ message: string; complaint: Complaint }> {
-        return this.http.post<any>(this.apiUrl, complaint).pipe(
-            map(response => ({
-                message: response.message,
-                complaint: response.data.complaint
-            }))
-        );
+    // Create a new complaint
+    createComplaint(complaintData: any): Observable<any> {
+        // Now accepts FormData for file uploads
+        return this.http.post<any>(this.apiUrl, complaintData);
     }
 
     // Get all complaints (with optional filters)
@@ -55,14 +51,9 @@ export class ComplaintService {
         );
     }
 
-    // Update complaint
-    updateComplaint(id: number, update: ComplaintUpdate): Observable<{ message: string; complaint: Complaint }> {
-        return this.http.put<any>(`${this.apiUrl}/${id}`, update).pipe(
-            map(response => ({
-                message: response.message,
-                complaint: response.data.complaint
-            }))
-        );
+    // Update complaint status/staff/notes
+    updateComplaint(id: number, updateData: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/${id}`, updateData);
     }
 
     // Delete complaint
@@ -79,5 +70,10 @@ export class ComplaintService {
         return this.http.get<any>(`${this.apiUrl}/stats`).pipe(
             map(response => response.data)
         );
+    }
+
+    // Submit feedback
+    submitFeedback(id: number, rating: number, feedback: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${id}/feedback`, { rating, feedback });
     }
 }

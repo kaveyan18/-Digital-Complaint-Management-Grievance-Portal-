@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComplaintService } from '../../services/complaint.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
     selector: 'app-new-complaint',
@@ -22,10 +23,13 @@ export class NewComplaintComponent {
         { value: 'other', label: 'Other', icon: 'help_outline' }
     ];
 
+    selectedFile: File | null = null;
+
     constructor(
         private fb: FormBuilder,
         private complaintService: ComplaintService,
         private authService: AuthService,
+        private notificationService: NotificationService,
         private router: Router
     ) {
         this.complaintForm = this.fb.group({
@@ -34,6 +38,13 @@ export class NewComplaintComponent {
             category: ['', Validators.required],
             attachments: ['']
         });
+    }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (file) {
+            this.selectedFile = file;
+        }
     }
 
     onSubmit(): void {
@@ -51,16 +62,22 @@ export class NewComplaintComponent {
         this.errorMessage = '';
         this.successMessage = '';
 
-        const complaintData = {
-            ...this.complaintForm.value,
-            user_id: user.id
-        };
+        const formData = new FormData();
+        formData.append('user_id', user.id.toString());
+        formData.append('title', this.complaintForm.get('title')?.value);
+        formData.append('description', this.complaintForm.get('description')?.value);
+        formData.append('category', this.complaintForm.get('category')?.value);
 
-        this.complaintService.createComplaint(complaintData).subscribe({
+        if (this.selectedFile) {
+            formData.append('attachment', this.selectedFile);
+        }
+
+        this.complaintService.createComplaint(formData).subscribe({
             next: (response) => {
                 this.loading = false;
-                const trackingId = response.complaint.complaint_unique_id || response.complaint.id;
-                this.successMessage = `Complaint submitted successfully! Your Tracking ID is: ${trackingId}`;
+                const trackingId = response.data.complaint.complaint_unique_id || response.data.complaint.id;
+                this.successMessage = `Complaint submitted successfully! Tracking ID: ${trackingId}`;
+                this.notificationService.showSuccess('Complaint submitted successfully!');
                 setTimeout(() => {
                     this.router.navigate(['/complaints']);
                 }, 3000);

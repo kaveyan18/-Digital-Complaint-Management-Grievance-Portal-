@@ -199,3 +199,141 @@ mat-card-actions.action-buttons {
     /* Fix Material bottom margin */
     width: 200px;
 }
+
+/* Feedback Styles */
+.feedback-display {
+    text-align: center;
+    border-left: 2px solid var(--border-color);
+    padding-left: 1.5rem;
+}
+
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+}
+
+.feedback-text {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.feedback-form-card {
+    margin-top: 2rem;
+    border: 2px solid var(--accent-color);
+}
+
+.star-rating {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.star-rating button {
+    width: 40px;
+    height: 40px;
+}
+
+.star-rating mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+/* New Detail Styles */
+.file-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.file-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.file-link:hover {
+    background: #eff6ff;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.file-link mat-icon {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--accent-color);
+}
+
+.file-link.proof {
+    border-left: 3px solid var(--success-color);
+}
+
+.effort-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 15px 0;
+    padding: 10px;
+    background: #fdf2f2;
+    border-radius: var(--radius-sm);
+    color: #991b1b;
+}
+
+.effort-display mat-icon {
+    color: #ef4444;
+}
+
+.resolution-info label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* Staff Action Styles */
+.staff-actions-container {
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.update-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.effort-input {
+    width: 120px;
+}
+
+.resolution-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.file-name-hint {
+    font-size: 0.75rem;
+    color: var(--success-color);
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

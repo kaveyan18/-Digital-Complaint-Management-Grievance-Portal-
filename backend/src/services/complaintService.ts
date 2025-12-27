@@ -3,6 +3,9 @@ import pool from '../config/database';
 import { ComplaintCreate, ComplaintUpdate, Complaint } from '../models/Complaint';
 import { AppError } from '../utils/AppError';
 import { generateComplaintId } from '../utils/idGenerator';
+import { NotificationService } from './notificationService';
+
+const notificationService = new NotificationService();
 
 export class ComplaintService {
     async createComplaint(complaintData: ComplaintCreate): Promise<Complaint> {
@@ -93,7 +96,7 @@ export class ComplaintService {
     }
 
     async updateComplaint(id: string, updateData: ComplaintUpdate): Promise<Complaint> {
-        const { status, staff_id, resolution_notes } = updateData;
+        const { status, staff_id, resolution_notes, resolution_attachments } = updateData;
         const updates: string[] = [];
         const params: any[] = [];
 
@@ -116,6 +119,11 @@ export class ComplaintService {
             params.push(resolution_notes);
         }
 
+        if (resolution_attachments) {
+            updates.push('resolution_attachments = ?');
+            params.push(resolution_attachments);
+        }
+
         if (updates.length === 0) {
             throw new AppError('No update fields provided', 400);
         }
@@ -132,7 +140,32 @@ export class ComplaintService {
         }
 
         // Fetch updated complaint
-        return this.getComplaintById(id);
+        const updatedComplaint = await this.getComplaintById(id);
+
+        // Notify user of status change
+        if (status) {
+            await notificationService.createNotification({
+                user_id: updatedComplaint.user_id,
+                message: `Your complaint #${updatedComplaint.complaint_unique_id || id} status has been updated to ${status}.`
+            });
+
+            // Mock email alert
+            const userEmail = (updatedComplaint as any).user_email || 'user@example.com';
+            console.log(`[EMAIL ALERT] To: ${userEmail}, Message: Your complaint status is now ${status}.`);
+        }
+
+        return updatedComplaint;
+    }
+
+    async submitFeedback(id: string, rating: number, feedback: string): Promise<void> {
+        const [result] = await pool.execute<ResultSetHeader>(
+            'UPDATE complaints SET rating = ?, feedback = ? WHERE id = ?',
+            [rating, feedback, id]
+        );
+
+        if (result.affectedRows === 0) {
+            throw new AppError('Complaint not found', 404);
+        }
     }
 
     async deleteComplaint(id: string): Promise<void> {

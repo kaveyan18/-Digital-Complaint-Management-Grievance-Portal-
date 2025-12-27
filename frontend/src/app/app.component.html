@@ -38,8 +38,31 @@
         <a routerLink="/admin/dashboard" class="nav-item">Admin Dashboard</a>
       </ng-container>
 
-      <!-- User Profile & Logout (Logged In) -->
+      <!-- User Profile & Notifications -->
       <div class="user-profile-nav" *ngIf="authService.isLoggedIn">
+        <!-- Notification Bell -->
+        <button mat-icon-button [matMenuTriggerFor]="notifMenu" class="notif-btn" (menuOpened)="markAllRead()">
+          <mat-icon [class.has-unread]="unreadCount > 0">notifications</mat-icon>
+          <span class="unread-badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
+        </button>
+
+        <mat-menu #notifMenu="matMenu" class="notif-dropdown">
+          <div class="notif-header">
+            <span>Notifications</span>
+            <span class="notif-count">{{unreadCount}} New</span>
+          </div>
+          <div class="notif-list">
+            <div *ngIf="notifications.length === 0" class="no-notif">No notifications</div>
+            <button mat-menu-item *ngFor="let n of notifications" [class.unread]="!n.is_read">
+              <mat-icon [style.color]="n.is_read ? '#94a3b8' : '#3B82F6'">info</mat-icon>
+              <div class="notif-content">
+                <p class="notif-msg">{{n.message}}</p>
+                <span class="notif-time">{{n.created_at | date:'short'}}</span>
+              </div>
+            </button>
+          </div>
+        </mat-menu>
+
         <span class="user-name">
           <mat-icon
             style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem; margin-right: 0.25rem;">account_circle</mat-icon>

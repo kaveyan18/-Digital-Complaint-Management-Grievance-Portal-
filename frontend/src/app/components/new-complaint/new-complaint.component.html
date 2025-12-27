@@ -50,13 +50,20 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Attachments (Optional) -->
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Attachments (Optional)</mat-label>
-                    <input matInput formControlName="attachments" placeholder="File path or URL">
-                    <mat-icon matSuffix>attach_file</mat-icon>
-                    <mat-hint>Enter file path or URL if you have supporting documents</mat-hint>
-                </mat-form-field>
+                <!-- Real File Upload (Optional) -->
+                <div class="file-upload-section">
+                    <label class="file-label">Supporting Documents (Images/PDFs)</label>
+                    <div class="file-picker-wrapper">
+                        <button mat-stroked-button type="button" (click)="fileInput.click()" class="file-pick-btn">
+                            <mat-icon>upload_file</mat-icon>
+                            {{ selectedFile ? 'Change File' : 'Choose File' }}
+                        </button>
+                        <span class="selected-filename" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+                        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;"
+                            accept=".jpg,.jpeg,.png,.pdf">
+                    </div>
+                    <p class="file-hint">Optional: Upload a photo or PDF related to your issue (Max 5MB)</p>
+                </div>
 
                 <!-- Error Message -->
                 <div class="message error-message" *ngIf="errorMessage">

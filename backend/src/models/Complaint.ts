@@ -9,7 +9,10 @@ export interface Complaint {
     status: 'Open' | 'Assigned' | 'In-progress' | 'Resolved';
     attachments?: string | null;
     resolution_notes?: string | null;
+    resolution_attachments?: string | null;
     complaint_unique_id?: string;
+    rating?: number | null;
+    feedback?: string | null;
     created_at?: Date;
     updated_at?: Date;
 }
@@ -28,6 +31,7 @@ export interface ComplaintUpdate {
     status?: 'Open' | 'Assigned' | 'In-progress' | 'Resolved';
     staff_id?: number;
     resolution_notes?: string;
+    resolution_attachments?: string;
 }
 
 // Complaint response with user info

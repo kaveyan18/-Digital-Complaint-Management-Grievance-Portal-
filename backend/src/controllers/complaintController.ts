@@ -20,6 +20,14 @@ export const createComplaint = catchAsync(async (req: Request, res: Response, ne
         throw new AppError('Category must be plumbing, electrical, facility, or other', 400);
     }
 
+    const file = req.file;
+    if (file) {
+        req.body.attachments = JSON.stringify([{
+            filename: file.originalname,
+            path: `uploads/${file.filename}`
+        }]);
+    }
+
     const complaint = await complaintService.createComplaint(req.body);
     sendResponse(res, 201, 'Complaint submitted successfully', { complaint });
 });
@@ -76,6 +84,14 @@ export const updateComplaint = catchAsync(async (req: Request, res: Response, ne
         }
     }
 
+    const file = req.file;
+    if (file) {
+        req.body.resolution_attachments = JSON.stringify([{
+            filename: file.originalname,
+            path: `uploads/${file.filename}`
+        }]);
+    }
+
     const complaint = await complaintService.updateComplaint(id, req.body);
     sendResponse(res, 200, 'Complaint updated successfully', { complaint });
 });
@@ -91,5 +107,18 @@ export const deleteComplaint = catchAsync(async (req: Request, res: Response, ne
 export const getComplaintStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const stats = await complaintService.getComplaintStats();
     sendResponse(res, 200, 'Complaint statistics', stats);
+});
+
+// Submit feedback/rating for a complaint
+export const submitFeedback = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { rating, feedback } = req.body;
+
+    if (!rating || !feedback) {
+        throw new AppError('Rating and feedback are required', 400);
+    }
+
+    await complaintService.submitFeedback(id, rating, feedback);
+    sendResponse(res, 200, 'Feedback submitted successfully');
 });
 

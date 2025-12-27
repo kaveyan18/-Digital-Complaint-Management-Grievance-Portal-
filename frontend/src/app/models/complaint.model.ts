@@ -9,7 +9,10 @@ export interface Complaint {
     status: 'Open' | 'Assigned' | 'In-progress' | 'Resolved';
     attachments?: string | null;
     resolution_notes?: string | null;
+    resolution_attachments?: string | null;
     complaint_unique_id?: string;
+    rating?: number | null;
+    feedback?: string | null;
     created_at?: Date;
     updated_at?: Date;
     user_name?: string;

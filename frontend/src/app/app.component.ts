@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './services/theme.service';
 import { filter } from 'rxjs/operators';
+import { NotificationService } from './services/notification.service';
+import { Notification } from './models/notification.model';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +15,13 @@ export class AppComponent implements OnInit {
   title = 'ResolveDesk';
   isMobileMenuOpen = false;
 
+  unreadCount = 0;
+  notifications: Notification[] = [];
+
   constructor(
     public authService: AuthService,
     public themeService: ThemeService,
+    private notificationService: NotificationService,
     private router: Router
   ) { }
 
@@ -25,6 +31,32 @@ export class AppComponent implements OnInit {
     ).subscribe(() => {
       this.isMobileMenuOpen = false;
     });
+
+    // Check notifications every 30 seconds if logged in
+    this.checkNotifications();
+    setInterval(() => this.checkNotifications(), 30000);
+  }
+
+  checkNotifications(): void {
+    const user = this.authService.currentUser;
+    if (user && user.id) {
+      this.notificationService.getNotifications(user.id).subscribe({
+        next: (res) => {
+          this.notifications = res.notifications;
+          this.unreadCount = res.unreadCount;
+        }
+      });
+    }
+  }
+
+  markAllRead(): void {
+    const user = this.authService.currentUser;
+    if (user && user.id) {
+      this.notificationService.markAllAsRead(user.id).subscribe(() => {
+        this.unreadCount = 0;
+        this.notifications.forEach(n => n.is_read = true);
+      });
+    }
   }
 
   logout(): void {

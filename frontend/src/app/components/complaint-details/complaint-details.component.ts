@@ -16,6 +16,7 @@ export class ComplaintDetailsComponent implements OnInit {
     errorMessage = '';
 
     selectedStatus: string = '';
+    selectedResolutionFile: File | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -29,6 +30,13 @@ export class ComplaintDetailsComponent implements OnInit {
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.loadComplaint(+id);
+        }
+    }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (file) {
+            this.selectedResolutionFile = file;
         }
     }
 
@@ -68,12 +76,18 @@ export class ComplaintDetailsComponent implements OnInit {
         if (!this.complaint || !this.selectedStatus || this.selectedStatus === this.complaint.status) return;
 
         if (confirm(`Are you sure you want to update status to ${this.selectedStatus}?`)) {
-            const update: any = { status: this.selectedStatus };
+            const formData = new FormData();
+            formData.append('status', this.selectedStatus);
 
-            this.complaintService.updateComplaint(this.complaint.id!, update).subscribe({
-                next: () => {
+            if (this.selectedResolutionFile) {
+                formData.append('attachment', this.selectedResolutionFile);
+            }
+
+            this.complaintService.updateComplaint(this.complaint.id!, formData).subscribe({
+                next: (res) => {
                     if (this.complaint) {
-                        this.complaint.status = this.selectedStatus as any;
+                        this.complaint = res.data.complaint;
+                        this.selectedStatus = this.complaint!.status;
                         this.notificationService.showSuccess('Status updated successfully');
                     }
                 },
@@ -82,6 +96,19 @@ export class ComplaintDetailsComponent implements OnInit {
                 }
             });
         }
+    }
+
+    parseAttachments(attachmentsString: string | null | undefined): any[] {
+        if (!attachmentsString) return [];
+        try {
+            return JSON.parse(attachmentsString);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    getFileUrl(path: string): string {
+        return `http://localhost:3000/${path}`;
     }
 
     getStatusClass(status: string): string {
@@ -110,5 +137,39 @@ export class ComplaintDetailsComponent implements OnInit {
         } else {
             this.router.navigate(['/complaints']);
         }
+    }
+
+    // Feedback logic
+    showFeedbackForm = false;
+    rating = 0;
+    feedback = '';
+    submittingFeedback = false;
+
+    setRating(star: number): void {
+        this.rating = star;
+    }
+
+    submitFeedback(): void {
+        if (!this.complaint || this.rating === 0 || !this.feedback) {
+            this.notificationService.showError('Please provide both a rating and a comment.');
+            return;
+        }
+
+        this.submittingFeedback = true;
+        this.complaintService.submitFeedback(this.complaint.id!, this.rating, this.feedback).subscribe({
+            next: () => {
+                this.submittingFeedback = false;
+                if (this.complaint) {
+                    this.complaint.rating = this.rating;
+                    this.complaint.feedback = this.feedback;
+                }
+                this.showFeedbackForm = false;
+                this.notificationService.showSuccess('Thank you for your feedback!');
+            },
+            error: (err) => {
+                this.submittingFeedback = false;
+                this.notificationService.showError(err.error?.message || 'Failed to submit feedback');
+            }
+        });
     }
 }

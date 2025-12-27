@@ -78,16 +78,37 @@
                     <mat-icon>attach_file</mat-icon>
                     Attachments
                 </h3>
-                <p>{{complaint.attachments}}</p>
+                <div class="file-links">
+                    <a *ngFor="let file of parseAttachments(complaint.attachments)" [href]="getFileUrl(file.path)"
+                        target="_blank" class="file-link">
+                        <mat-icon>insert_drive_file</mat-icon>
+                        {{file.filename}}
+                    </a>
+                </div>
             </div>
 
-            <!-- Resolution Notes -->
-            <div class="resolution-section" *ngIf="complaint.resolution_notes">
+            <!-- Resolution Notes & Proof -->
+            <div class="resolution-section" *ngIf="complaint.resolution_notes || complaint.resolution_attachments">
                 <h3>
-                    <mat-icon>notes</mat-icon>
-                    Resolution Notes
+                    <mat-icon>task_alt</mat-icon>
+                    Resolution Details
                 </h3>
-                <p>{{complaint.resolution_notes}}</p>
+                <div class="resolution-info">
+                    <div *ngIf="complaint.resolution_notes">
+                        <label>Notes:</label>
+                        <p>{{complaint.resolution_notes}}</p>
+                    </div>
+                    <div *ngIf="complaint.resolution_attachments" class="proof-display">
+                        <label>Resolution Proof:</label>
+                        <div class="file-links">
+                            <a *ngFor="let file of parseAttachments(complaint.resolution_attachments)"
+                                [href]="getFileUrl(file.path)" target="_blank" class="file-link proof">
+                                <mat-icon>verified</mat-icon>
+                                {{file.filename}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Status Timeline -->
@@ -132,22 +153,84 @@
                 Back
             </button>
 
-            <!-- Status Update Section for Staff -->
-            <div class="status-update-section"
+            <!-- Feedback Display for Resolved Complaints -->
+            <div class="feedback-display" *ngIf="complaint.status === 'Resolved' && complaint.rating">
+                <div class="rating-stars">
+                    <mat-icon *ngFor="let i of [1,2,3,4,5]"
+                        [style.color]="i <= complaint.rating! ? '#ffb400' : '#e2e8f0'">
+                        star
+                    </mat-icon>
+                </div>
+                <p class="feedback-text">"{{complaint.feedback}}"</p>
+            </div>
+
+            <!-- Feedback Form for Users -->
+            <button mat-raised-button color="accent"
+                *ngIf="authService.userRole === 'User' && complaint.status === 'Resolved' && !complaint.rating && !showFeedbackForm"
+                (click)="showFeedbackForm = true">
+                Rate Service
+            </button>
+
+            <!-- Status & Effort Update Section for Staff -->
+            <div class="staff-actions-container"
                 *ngIf="authService.userRole === 'Staff' && complaint.status !== 'Resolved'">
-                <mat-form-field appearance="outline" class="status-select">
-                    <mat-label>Update Status</mat-label>
-                    <mat-select [(value)]="selectedStatus">
-                        <mat-option *ngFor="let status of getValidStatuses()" [value]="status">
-                            {{status}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-raised-button color="primary" [disabled]="selectedStatus === complaint.status"
-                    (click)="updateStatus()">
-                    Update Status
+
+                <div class="update-controls">
+                    <mat-form-field appearance="outline" class="status-select">
+                        <mat-label>Update Status</mat-label>
+                        <mat-select [(value)]="selectedStatus">
+                            <mat-option *ngFor="let status of getValidStatuses()" [value]="status">
+                                {{status}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div class="resolution-upload">
+                        <button mat-stroked-button type="button" (click)="resFileInput.click()">
+                            <mat-icon>upload</mat-icon>
+                            {{ selectedResolutionFile ? 'Proof Added' : 'Add Proof (Image/PDF)' }}
+                        </button>
+                        <input #resFileInput type="file" (change)="onFileSelected($event)" style="display: none;"
+                            accept=".jpg,.jpeg,.png,.pdf">
+                        <span class="file-name-hint"
+                            *ngIf="selectedResolutionFile">{{selectedResolutionFile.name}}</span>
+                    </div>
+
+                    <button mat-raised-button color="primary"
+                        [disabled]="selectedStatus === complaint.status && !selectedResolutionFile"
+                        (click)="updateStatus()">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+
+    <!-- Feedback Form Overlay/Section -->
+    <mat-card class="feedback-form-card animate-fade-in-up" *ngIf="showFeedbackForm">
+        <mat-card-header>
+            <mat-card-title>Rate our Service</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>How would you rate the resolution of this complaint?</p>
+            <div class="star-rating">
+                <button mat-icon-button *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)">
+                    <mat-icon [style.color]="star <= rating ? '#ffb400' : '#e2e8f0'">
+                        {{star <= rating ? 'star' : 'star_border' }} </mat-icon>
                 </button>
             </div>
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Your Feedback (Thank You Note)</mat-label>
+                <textarea matInput rows="3" [(ngModel)]="feedback"
+                    placeholder="Write a short note about the service..."></textarea>
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions align="end">
+            <button mat-button (click)="showFeedbackForm = false">Cancel</button>
+            <button mat-raised-button color="primary" [disabled]="rating === 0 || !feedback || submittingFeedback"
+                (click)="submitFeedback()">
+                Submit Feedback
+            </button>
         </mat-card-actions>
     </mat-card>
 </div>
