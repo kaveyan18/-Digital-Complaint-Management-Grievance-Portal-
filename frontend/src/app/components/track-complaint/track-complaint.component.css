@@ -1,5 +1,7 @@
 .track-container {
     padding: 2rem;
+    padding-top: 100px;
+    /* Offset for fixed navbar */
     max-width: 800px;
     margin: 0 auto;
 }

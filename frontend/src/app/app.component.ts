@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './services/theme.service';
@@ -14,6 +14,7 @@ import { Notification } from './models/notification.model';
 export class AppComponent implements OnInit {
   title = 'ResolveDesk';
   isMobileMenuOpen = false;
+  isScrolled = false;
 
   unreadCount = 0;
   notifications: Notification[] = [];
@@ -35,6 +36,11 @@ export class AppComponent implements OnInit {
     // Check notifications every 30 seconds if logged in
     this.checkNotifications();
     setInterval(() => this.checkNotifications(), 30000);
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 20;
   }
 
   checkNotifications(): void {
@@ -65,13 +71,18 @@ export class AppComponent implements OnInit {
   }
 
   navigateToDashboard(): void {
+    if (!this.authService.isLoggedIn) {
+      this.router.navigate(['/']);
+      return;
+    }
+
     const role = this.authService.userRole;
     if (role === 'Staff') {
       this.router.navigate(['/staff/dashboard']);
     } else if (role === 'Admin') {
       this.router.navigate(['/admin/dashboard']);
     } else {
-      this.router.navigate(['/complaints']);
+      this.router.navigate(['/track-complaint']);
     }
   }
 

@@ -11,6 +11,7 @@ import { StaffDashboardComponent } from './components/staff-dashboard/staff-dash
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
 import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
+import { AdminAnalyticsComponent } from './components/admin-analytics/admin-analytics.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -36,7 +37,7 @@ const routes: Routes = [
   {
     path: 'complaints/new',
     component: NewComplaintComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['User'] }
   },
   {
@@ -60,13 +61,22 @@ const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },
+  {
+    path: 'admin/analytics',
+    component: AdminAnalyticsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] }
+  },
 
   // Wildcard Route
   { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    anchorScrolling: 'enabled',
+    scrollPositionRestoration: 'enabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,10 +1,10 @@
 /* Split Screen Layout */
 .registration-wrapper {
   display: flex;
-  min-height: calc(100vh - 74px);
-  /* Adjust for navbar height */
+  min-height: 100vh;
   width: 100%;
   background: white;
+  padding-top: 0;
 }
 
 /* Left Side: Image */
@@ -42,6 +42,8 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   opacity: 0;
   animation: fadeInUp 1s ease-out forwards;
+  margin-top: 80px;
+  /* Offset for image content */
 }
 
 .image-content h2 {
@@ -64,6 +66,8 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  padding-top: 140px;
+  /* Offset for fixed navbar */
   background: white;
   overflow-y: auto;
   /* Ensure form is scrollable on small screens */
