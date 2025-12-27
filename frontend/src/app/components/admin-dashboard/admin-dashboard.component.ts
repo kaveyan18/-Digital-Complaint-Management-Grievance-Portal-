@@ -4,6 +4,7 @@ import { ComplaintService } from '../../services/complaint.service';
 import { AuthService } from '../../services/auth.service';
 import { Complaint, ComplaintUpdate, ComplaintStats } from '../../models/complaint.model';
 import { User } from '../../models/user.model';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -46,7 +47,9 @@ export class AdminDashboardComponent implements OnInit {
 
         // Load stats
         this.complaintService.getStats().subscribe({
-            next: (stats) => this.stats = stats,
+            next: (stats) => {
+                this.stats = stats;
+            },
             error: () => { } // Stats are optional
         });
 
@@ -60,6 +63,7 @@ export class AdminDashboardComponent implements OnInit {
     assignStaff(complaint: Complaint, staffId: number): void {
         if (!complaint.id) return;
 
+        // ... rest of method
         const update: ComplaintUpdate = { staff_id: staffId };
 
         this.complaintService.updateComplaint(complaint.id, update).subscribe({

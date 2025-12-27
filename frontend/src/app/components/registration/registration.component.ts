@@ -16,9 +16,8 @@ export class RegistrationComponent {
     successMessage = '';
 
     roles = [
-        { value: 'User', label: 'User (Resident/Student/Employee)' },
-        { value: 'Staff', label: 'Staff / Technician' },
-        { value: 'Admin', label: 'Admin (Optional)' }
+        { value: 'User', label: 'User ' },
+        { value: 'Staff', label: 'Staff' }
     ];
 
     constructor(

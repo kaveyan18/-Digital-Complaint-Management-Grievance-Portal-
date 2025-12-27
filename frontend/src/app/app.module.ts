@@ -36,6 +36,8 @@ import { ResolutionDialogComponent } from './components/resolution-dialog/resolu
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { AdminAnalyticsComponent } from './components/admin-analytics/admin-analytics.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,8 @@ import { TrackComplaintComponent } from './components/track-complaint/track-comp
     AdminDashboardComponent,
     HomeComponent,
     ResolutionDialogComponent,
-    TrackComplaintComponent
+    TrackComplaintComponent,
+    AdminAnalyticsComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,7 @@ import { TrackComplaintComponent } from './components/track-complaint/track-comp
     ReactiveFormsModule,
     FormsModule,
     AppRoutingModule,
+    NgxChartsModule,
     // Angular Material
     MatToolbarModule,
     MatButtonModule,

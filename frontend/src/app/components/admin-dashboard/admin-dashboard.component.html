@@ -8,20 +8,51 @@
     </div>
 
     <!-- Stats Cards (Optional Analytics) -->
+    <!-- Stats Grid -->
     <div class="stats-grid" *ngIf="stats">
-        <mat-card class="stat-card">
-            <mat-card-content>
-                <div class="stat-value">{{stats.total}}</div>
-                <div class="stat-label">Total Complaints</div>
-            </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card" *ngFor="let item of stats.byStatus">
-            <mat-card-content>
-                <div class="stat-value">{{item.count}}</div>
-                <div class="stat-label">{{item.status}}</div>
-            </mat-card-content>
-        </mat-card>
+        <!-- Total Card -->
+        <div class="stat-card total-card">
+            <div class="stat-icon">
+                <mat-icon>dashboard</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{stats.total}}</span>
+                <span class="stat-label">Total</span>
+            </div>
+        </div>
+
+        <!-- Avg Resolution Time Card -->
+        <div class="stat-card total-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+                <mat-icon style="color: white;">timer</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{stats.avgResolutionTime}} hrs</span>
+                <span class="stat-label">Avg Resolution</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Cards -->
+        <div class="stat-card" *ngFor="let item of stats.byStatus" [class.pending-card]="item.status === 'Open'"
+            [class.assigned-card]="item.status === 'Assigned'" [class.progress-card]="item.status === 'In-progress'"
+            [class.resolved-card]="item.status === 'Resolved'">
+
+            <div class="stat-icon">
+                <mat-icon *ngIf="item.status === 'Open'">error_outline</mat-icon>
+                <mat-icon *ngIf="item.status === 'Assigned'">assignment_ind</mat-icon>
+                <mat-icon *ngIf="item.status === 'In-progress'">trending_up</mat-icon>
+                <mat-icon *ngIf="item.status === 'Resolved'">check_circle</mat-icon>
+                <mat-icon
+                    *ngIf="['Open', 'Assigned', 'In-progress', 'Resolved'].indexOf(item.status) === -1">info</mat-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{item.count}}</span>
+                <span class="stat-label">{{item.status}}</span>
+            </div>
+        </div>
     </div>
+
+
 
     <!-- Messages -->
     <div class="message success-message" *ngIf="successMessage">

@@ -1,0 +1,88 @@
+<div class="admin-analytics">
+    <div class="header-section">
+        <h1>
+            <mat-icon>analytics</mat-icon>
+            Analytics Dashboard
+        </h1>
+        <p class="subtitle">Detailed insights into complaint trends and staff performance</p>
+    </div>
+
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading analytics...</p>
+    </div>
+
+    <div *ngIf="!loading && stats">
+        <!-- Key Metrics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card total-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                    <mat-icon style="color: white;">dashboard</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value">{{stats.total}}</span>
+                    <span class="stat-label">Total Complaints</span>
+                </div>
+            </div>
+
+            <div class="stat-card resolved-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <mat-icon style="color: white;">check_circle</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value">{{stats.resolved}}</span>
+                    <span class="stat-label">Resolved</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <mat-icon style="color: white;">timer</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value">{{stats.avgResolutionTime}} hrs</span>
+                    <span class="stat-label">Avg Resolution Time</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <mat-icon style="color: white;">group</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value">{{stats.activeStaff}}</span>
+                    <span class="stat-label">Active Staff</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <!-- Category Distribution -->
+            <div class="chart-card">
+                <h3>Complaints by Category</h3>
+                <ngx-charts-bar-vertical [view]="[500, 300]" [scheme]="colorScheme" [results]="categoryData"
+                    [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [showXAxisLabel]="true"
+                    [showYAxisLabel]="true" xAxisLabel="Category" yAxisLabel="Count">
+                </ngx-charts-bar-vertical>
+            </div>
+
+            <!-- Status Distribution -->
+            <div class="chart-card">
+                <h3>Current Status Distribution</h3>
+                <ngx-charts-pie-chart [view]="[500, 300]" [scheme]="colorScheme" [results]="statusData"
+                    [gradient]="false" [legend]="true" [labels]="true" [doughnut]="true">
+                </ngx-charts-pie-chart>
+            </div>
+
+            <!-- Staff Performance -->
+            <div class="chart-card" style="grid-column: 1 / -1;">
+                <h3>Staff Performance (Resolved Tickets)</h3>
+                <ngx-charts-bar-vertical [view]="[1000, 300]" [scheme]="colorScheme" [results]="staffPerformanceData"
+                    [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [showXAxisLabel]="true"
+                    [showYAxisLabel]="true" xAxisLabel="Staff Member" yAxisLabel="Resolved Count">
+                </ngx-charts-bar-vertical>
+            </div>
+        </div>
+    </div>
+</div>

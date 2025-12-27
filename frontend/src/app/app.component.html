@@ -1,47 +1,53 @@
-<nav class="navbar">
-  <div class="container nav-content">
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-content">
     <a (click)="navigateToDashboard()" class="logo" style="cursor: pointer;">
-      <mat-icon style="margin-right: 0.5rem; color: var(--accent-color);">security</mat-icon>
+      <mat-icon style="margin-right: 0.5rem; color: #000;">security</mat-icon>
       ResolveDesk
     </a>
 
-    <button class="mobile-toggle" (click)="toggleMobileMenu()">
-      <mat-icon>menu</mat-icon>
-    </button>
-
-    <div class="nav-links" [class.active]="isMobileMenuOpen">
-      <!-- Public Links (Not Logged In) -->
+    <!-- Pill Container for Main Links -->
+    <div class="nav-links-pill-container" [class.mobile-active]="isMobileMenuOpen">
+      <!-- Guest Links -->
       <ng-container *ngIf="!authService.isLoggedIn">
-        <a routerLink="/" class="nav-item">Home</a>
+        <a routerLink="/" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}"
+          class="nav-item">Home</a>
+        <a routerLink="/" fragment="how-it-works" class="nav-item">Works</a>
         <a routerLink="/" fragment="features" class="nav-item">Features</a>
-        <a routerLink="/" fragment="how-it-works" class="nav-item">How it Works</a>
-        <a routerLink="/login" class="nav-item">Track Complaint</a>
-        <a routerLink="/login" class="nav-item">Raise a Complaint</a>
-        <a routerLink="/login" class="nav-item btn btn-primary btn-sm">Login</a>
+        <a routerLink="/login" routerLinkActive="nav-item-active" class="nav-item">Login</a>
       </ng-container>
 
-      <!-- Resident / Student Links -->
+      <!-- User Links -->
       <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'User'">
-        <a routerLink="/" class="nav-item">Home</a>
-        <a routerLink="/track-complaint" class="nav-item">Track Complaint</a>
-        <a routerLink="/complaints/new" class="nav-item">Raise a Complaint</a>
+        <a routerLink="/" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}"
+          class="nav-item">Home</a>
+        <a routerLink="/track-complaint" routerLinkActive="nav-item-active" class="nav-item">Tracking</a>
+        <a routerLink="/complaints" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
       </ng-container>
 
-      <!-- Staff / Technician Links -->
+      <!-- Staff Links -->
       <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'Staff'">
-        <a routerLink="/" class="nav-item">Home</a>
+        <a routerLink="/" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}"
+          class="nav-item">Home</a>
+        <a routerLink="/staff/dashboard" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
       </ng-container>
 
       <!-- Admin Links -->
       <ng-container *ngIf="authService.isLoggedIn && authService.userRole === 'Admin'">
-        <a routerLink="/" class="nav-item">Home</a>
-        <a routerLink="/admin/dashboard" class="nav-item">Admin Dashboard</a>
+        <a routerLink="/" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}"
+          class="nav-item">Home</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
+        <a routerLink="/admin/analytics" routerLinkActive="nav-item-active" class="nav-item">Analytics</a>
       </ng-container>
+    </div>
 
-      <!-- User Profile & Notifications -->
+    <!-- Right Actions -->
+    <div class="nav-right-actions">
+      <a *ngIf="!authService.isLoggedIn" routerLink="/register" class="contact-us-btn">Register</a>
+
       <div class="user-profile-nav" *ngIf="authService.isLoggedIn">
         <!-- Notification Bell -->
-        <button mat-icon-button [matMenuTriggerFor]="notifMenu" class="notif-btn" (menuOpened)="markAllRead()">
+        <button mat-icon-button [matMenuTriggerFor]="notifMenu" class="notif-btn" (menuOpened)="markAllRead()"
+          style="color: #000;">
           <mat-icon [class.has-unread]="unreadCount > 0">notifications</mat-icon>
           <span class="unread-badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
         </button>
@@ -63,13 +69,17 @@
           </div>
         </mat-menu>
 
-        <span class="user-name">
+        <span class="user-name" style="color: #000;">
           <mat-icon
             style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem; margin-right: 0.25rem;">account_circle</mat-icon>
           {{authService.currentUser?.name}}
         </span>
-        <button (click)="logout()" class="btn-logout">Logout</button>
+        <button (click)="logout()" class="btn-logout" style="border-radius: 999px;">Logout</button>
       </div>
+
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
     </div>
   </div>
 </nav>
@@ -98,9 +108,9 @@
 
     <div class="footer-links-group">
       <h4>Support</h4>
-      <a routerLink="/complaints">Track Status</a>
-      <a routerLink="/help">Help Center</a>
-      <a routerLink="/contact">Contact Support</a>
+      <a routerLink="/track-complaint">Track Status</a>
+      <a routerLink="/" fragment="how-it-works">Help Center</a>
+      <a routerLink="/" fragment="about">Contact Support</a>
     </div>
 
     <div class="footer-info">

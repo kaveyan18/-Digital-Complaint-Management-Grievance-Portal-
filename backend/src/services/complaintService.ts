@@ -180,27 +180,44 @@ export class ComplaintService {
     }
 
     async getComplaintStats(): Promise<any> {
+        // 1. Status Stats
         const [statusStats] = await pool.execute<RowDataPacket[]>(
             'SELECT status, COUNT(*) as count FROM complaints GROUP BY status'
         );
 
+        // 2. Category Stats
         const [categoryStats] = await pool.execute<RowDataPacket[]>(
             'SELECT category, COUNT(*) as count FROM complaints GROUP BY category'
         );
 
+        // 3. Total Complaints
         const [totalCount] = await pool.execute<RowDataPacket[]>(
             'SELECT COUNT(*) as total FROM complaints'
         );
 
+        // 4. Staff Count
         const [staffCount] = await pool.execute<RowDataPacket[]>(
-            "SELECT COUNT(*) as count FROM users WHERE role IN ('Staff', 'Admin')"
+            "SELECT COUNT(*) as count FROM users WHERE role = 'Staff'"
         );
 
+        // 5. Average Resolution Time (in hours)
+        // Only considers tickets that are 'Resolved' and have an updated_at time
         const [resolutionTime] = await pool.execute<RowDataPacket[]>(
-            "SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avgHours FROM complaints WHERE status = 'Resolved'"
+            `SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avgHours 
+             FROM complaints 
+             WHERE status = 'Resolved'`
         );
 
-        // Find resolved count from statusStats
+        // 6. Staff Performance (Resolved count per staff)
+        const [staffPerformance] = await pool.execute<RowDataPacket[]>(
+            `SELECT u.name, COUNT(c.id) as resolved_count 
+             FROM complaints c 
+             JOIN users u ON c.staff_id = u.id 
+             WHERE c.status = 'Resolved' 
+             GROUP BY c.staff_id`
+        );
+
+        // Find resolved count from statusStats for summary
         const resolvedStat = statusStats.find(s => s.status === 'Resolved');
         const resolvedCount = resolvedStat ? resolvedStat.count : 0;
 
@@ -208,9 +225,10 @@ export class ComplaintService {
             total: totalCount[0].total,
             resolved: resolvedCount,
             activeStaff: staffCount[0].count,
-            avgResolutionTime: 24, // Hardcoded to 24 as requested
+            avgResolutionTime: parseFloat(resolutionTime[0].avgHours || 0).toFixed(1),
             byStatus: statusStats,
-            byCategory: categoryStats
+            byCategory: categoryStats,
+            staffPerformance: staffPerformance
         };
     }
 }

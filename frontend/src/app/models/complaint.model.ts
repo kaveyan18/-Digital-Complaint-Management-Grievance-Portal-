@@ -41,4 +41,5 @@ export interface ComplaintStats {
     avgResolutionTime: number;
     byStatus: { status: string; count: number }[];
     byCategory: { category: string; count: number }[];
+    staffPerformance?: { name: string; resolved_count: number }[];
 }
