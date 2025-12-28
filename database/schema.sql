@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS notifications (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insert sample staff and admin users (optional)
+-- Insert sample staff and admin users
+-- Password for both is: admin123
 INSERT INTO users (name, email, password, role, contact_info) VALUES
-('Admin User', 'admin@portal.com', '$2a$10$xxxxxxxxxxx', 'Admin', '1234567890'),
-('Staff Member', 'staff@portal.com', '$2a$10$xxxxxxxxxxx', 'Staff', '0987654321');
+('Admin User', 'admin@portal.com', '$2a$10$a0FHAEb/qzhL2t2QUVmb4Oub/cruNHEunuXfoto7B18Kw.ZPcltma', 'Admin', '1234567890'),
+('Staff Member', 'staff@portal.com', '$2a$10$a0FHAEb/qzhL2t2QUVmb4Oub/cruNHEunuXfoto7B18Kw.ZPcltma', 'Staff', '0987654321');
