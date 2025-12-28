@@ -1,5 +1,5 @@
 -- Digital Complaint Management & Grievance Portal
--- Database Schema (MySQL - Maximum 2 Tables)
+-- Database Schema
 
 -- Create database
 CREATE DATABASE IF NOT EXISTS complaint_portal;
@@ -21,19 +21,33 @@ CREATE TABLE IF NOT EXISTS complaints (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   staff_id INT NULL,
+  complaint_unique_id VARCHAR(50) NOT NULL,
   title VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   category ENUM('plumbing', 'electrical', 'facility', 'other') NOT NULL,
   status ENUM('Open', 'Assigned', 'In-progress', 'Resolved') DEFAULT 'Open',
   attachments VARCHAR(500) NULL,
   resolution_notes TEXT NULL,
+  resolution_attachments VARCHAR(500) NULL,
+  rating INT NULL,
+  feedback TEXT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (staff_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+-- Notifications Table
+CREATE TABLE IF NOT EXISTS notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Insert sample staff and admin users (optional)
 INSERT INTO users (name, email, password, role, contact_info) VALUES
-('Admin User', 'admin@portal.com', 'admin', 'Admin', '1234567890'),
+('Admin User', 'admin@portal.com', '$2a$10$xxxxxxxxxxx', 'Admin', '1234567890'),
 ('Staff Member', 'staff@portal.com', '$2a$10$xxxxxxxxxxx', 'Staff', '0987654321');
