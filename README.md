@@ -160,7 +160,10 @@ matrimony/Cap/
 
 ## 📞 Contact
 **Team ResolveDesk**  
-*Lead Developer*: Kaveyan  
+*Lead Developer*: Kaveyan S
+*Team member*:Rajakarthikeyan V
+Muvvala Saiteja
+Narra Venkatesh
 *Email*: dev@resolvedesk.com
 
 ---
