@@ -75,7 +75,7 @@ const routes: Routes = [
   },
 
   // Wildcard Route
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({

@@ -1,15 +1,15 @@
-/* Premium Footer Styles - Minimalist White */
+/* Premium Footer Styles - Dark Mode */
 .footer {
     margin-top: auto;
-    background: #ffffff;
-    /* Pure White */
-    color: #64748B;
-    /* Slate 500 */
+    background: #000000;
+    /* Pure Black */
+    color: #94a3b8;
+    /* Slate 400 */
     padding: 4rem 0 2rem;
     font-family: var(--font-body);
     position: relative;
     overflow: hidden;
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #1e293b;
 }
 
 .footer-content {
@@ -23,8 +23,8 @@
 }
 
 .footer-brand h3 {
-    color: #000000;
-    /* Black */
+    color: #ffffff;
+    /* White */
     font-size: 1.5rem;
     margin-bottom: 1rem;
     display: flex;
@@ -35,7 +35,7 @@
 }
 
 .footer-brand p {
-    color: #64748B;
+    color: #94a3b8;
     max-width: 300px;
     line-height: 1.6;
 }
@@ -49,8 +49,8 @@
 
 .footer-links-group h4,
 .footer-info h4 {
-    color: #000000;
-    /* Black */
+    color: #ffffff;
+    /* White */
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -58,20 +58,20 @@
 }
 
 .footer-links-group a {
-    color: #64748B;
+    color: #94a3b8;
     text-decoration: none;
     transition: all 0.3s ease;
     display: inline-block;
 }
 
 .footer-links-group a:hover {
-    color: #000000;
-    /* Black hover */
+    color: #ffffff;
+    /* White hover */
     transform: translateX(4px);
 }
 
 .footer-info p {
-    color: #64748B;
+    color: #94a3b8;
     display: flex;
     align-items: center;
     gap: 0.7rem;
@@ -79,14 +79,14 @@
 }
 
 .footer-contact-link {
-    color: #64748B;
+    color: #94a3b8;
     text-decoration: none;
     font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
 .footer-contact-link:hover {
-    color: #000000;
+    color: #ffffff;
 }
 
 .footer-icon-wrapper {
@@ -95,15 +95,16 @@
     justify-content: center;
     width: 2rem;
     height: 2rem;
-    background: #F1F5F9;
-    /* Slate 100 */
+    background: #1e293b;
+    /* Slate 800 */
     border-radius: 50%;
-    color: #000000;
+    color: #ffffff;
     transition: all 0.3s ease;
 }
 
 .footer-info p:hover .footer-icon-wrapper {
-    background: #E2E8F0;
+    background: #334155;
+    /* Slate 700 */
     transform: scale(1.1);
 }
 
@@ -124,11 +125,11 @@
 }
 
 .footer-bottom {
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #1e293b;
     padding-top: 2rem;
     text-align: center;
     font-size: 0.875rem;
-    color: #94A3B8;
+    color: #64748b;
     max-width: 100%;
     margin: 0 auto;
 }

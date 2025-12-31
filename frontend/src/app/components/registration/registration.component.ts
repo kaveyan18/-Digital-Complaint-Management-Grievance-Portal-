@@ -48,7 +48,7 @@ export class RegistrationComponent {
                 this.loading = false;
                 this.successMessage = response.message;
                 setTimeout(() => {
-                    this.router.navigate(['/login']);
+                    this.router.navigate(['/home']);
                 }, 1500);
             },
             error: (error) => {

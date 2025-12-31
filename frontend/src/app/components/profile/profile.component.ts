@@ -142,14 +142,6 @@ export class ProfileComponent implements OnInit {
     }
 
     // Admin Actions
-    toggleUserStatus(user: any): void {
-        if (confirm(`Are you sure you want to ${user.isActive ? 'disable' : 'enable'} this account?`)) {
-            // Mock API call
-            console.log('Toggling user status:', user);
-            // user.isActive = !user.isActive; // Toggle locally for demo
-        }
-    }
-
     removeUser(user: any): void {
         if (confirm(`Are you sure you want to delete ${user.name}? This action cannot be undone.`)) {
             console.log('Deleting user:', user);
@@ -160,14 +152,6 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    changeUserRole(user: any): void {
-        const newRole = user.role === 'Staff' ? 'User' : 'Staff';
-        if (confirm(`Promote/Demote ${user.name} to ${newRole}?`)) {
-            console.log('Changing role:', user);
-            // Mock update
-            user.role = newRole;
-        }
-    }
 
     calculateStats(): void {
         this.stats.total = this.complaints.length;

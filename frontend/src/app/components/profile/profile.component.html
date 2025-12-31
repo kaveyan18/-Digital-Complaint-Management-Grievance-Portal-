@@ -243,14 +243,6 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="changeUserRole(user)">
-                                <mat-icon>admin_panel_settings</mat-icon>
-                                <span>{{ user.role === 'Staff' ? 'Demote to User' : 'Promote to Staff' }}</span>
-                            </button>
-                            <button mat-menu-item class="text-danger" (click)="toggleUserStatus(user)">
-                                <mat-icon color="warn">block</mat-icon>
-                                <span>Disable Account</span>
-                            </button>
                             <button mat-menu-item class="text-danger" (click)="removeUser(user)">
                                 <mat-icon color="warn">delete</mat-icon>
                                 <span>Remove User</span>
