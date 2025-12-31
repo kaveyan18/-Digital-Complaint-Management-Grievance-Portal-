@@ -76,4 +76,11 @@ export class ComplaintService {
     submitFeedback(id: number, rating: number, feedback: string): Observable<any> {
         return this.http.post(`${this.apiUrl}/${id}/feedback`, { rating, feedback });
     }
+
+    // Get complaint history logs
+    getComplaintLogs(id: number): Observable<any[]> {
+        return this.http.get<any>(`${this.apiUrl}/${id}/logs`).pipe(
+            map(response => response.data.logs)
+        );
+    }
 }

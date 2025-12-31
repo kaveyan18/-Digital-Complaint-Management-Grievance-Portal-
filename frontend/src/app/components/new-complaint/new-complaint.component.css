@@ -101,3 +101,14 @@ mat-option mat-icon {
     color: var(--text-secondary);
     margin: 8px 0 0;
 }
+
+@media (max-width: 600px) {
+    .new-complaint-container {
+        padding: 1rem;
+        padding-top: 80px;
+    }
+
+    .complaint-card {
+        padding: 15px;
+    }
+}

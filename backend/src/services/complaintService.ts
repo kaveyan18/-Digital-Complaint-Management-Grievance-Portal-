@@ -8,6 +8,29 @@ import { NotificationService } from './notificationService';
 const notificationService = new NotificationService();
 
 export class ComplaintService {
+    async logAction(complaint_id: number, user_id: number | null, action: string, details: any): Promise<void> {
+        try {
+            await pool.execute(
+                'INSERT INTO complaint_logs (complaint_id, user_id, action, details) VALUES (?, ?, ?, ?)',
+                [complaint_id, user_id, action, JSON.stringify(details)]
+            );
+        } catch (e) {
+            console.error('Failed to log action:', e);
+        }
+    }
+
+    async getComplaintLogs(complaint_id: string): Promise<any[]> {
+        const [rows] = await pool.execute<RowDataPacket[]>(
+            `SELECT l.*, u.name as user_name, u.role as user_role 
+             FROM complaint_logs l 
+             LEFT JOIN users u ON l.user_id = u.id 
+             WHERE l.complaint_id = ? 
+             ORDER BY l.created_at DESC`,
+            [complaint_id]
+        );
+        return rows;
+    }
+
     async createComplaint(complaintData: ComplaintCreate): Promise<Complaint> {
         const { user_id, title, description, category, attachments } = complaintData;
         const complaint_unique_id = generateComplaintId();
@@ -17,8 +40,11 @@ export class ComplaintService {
             [user_id, title, description, category, attachments || null, 'Open', complaint_unique_id]
         );
 
+        const newId = result.insertId;
+        await this.logAction(newId, user_id, 'CREATED', { title, category });
+
         return {
-            id: result.insertId,
+            id: newId,
             user_id,
             title,
             description,
@@ -95,28 +121,33 @@ export class ComplaintService {
         return complaints[0] as Complaint;
     }
 
-    async updateComplaint(id: string, updateData: ComplaintUpdate): Promise<Complaint> {
+    async updateComplaint(id: string, updateData: ComplaintUpdate, userId?: number): Promise<Complaint> {
         const { status, staff_id, resolution_notes, resolution_attachments } = updateData;
         const updates: string[] = [];
         const params: any[] = [];
+        const logDetails: any = {};
 
         if (status) {
             updates.push('status = ?');
             params.push(status);
+            logDetails.status = status;
         }
 
         if (staff_id !== undefined) {
             updates.push('staff_id = ?');
             params.push(staff_id);
+            logDetails.staff_id = staff_id;
             if (!status) {
                 updates.push('status = ?');
                 params.push('Assigned');
+                logDetails.status = 'Assigned';
             }
         }
 
         if (resolution_notes) {
             updates.push('resolution_notes = ?');
             params.push(resolution_notes);
+            logDetails.notes = 'Resolution notes updated';
         }
 
         if (resolution_attachments) {
@@ -139,6 +170,10 @@ export class ComplaintService {
             throw new AppError('Complaint not found', 404);
         }
 
+        // Log the action
+        // Note: userId passed optionally to track WHO made the change
+        await this.logAction(parseInt(id), userId || null, status ? 'STATUS_CHANGE' : 'UPDATED', logDetails);
+
         // Fetch updated complaint
         const updatedComplaint = await this.getComplaintById(id);
 
@@ -152,8 +187,11 @@ export class ComplaintService {
             // Mock email alert
             const userEmail = (updatedComplaint as any).user_email || 'user@example.com';
             console.log(`[EMAIL ALERT] To: ${userEmail}, Message: Your complaint status is now ${status}.`);
+            return updatedComplaint;
         }
 
+        // Note: To use userId in updateComplaint, the controller needs to pass it properly. 
+        // Assuming the controller extracts user from req.user
         return updatedComplaint;
     }
 
@@ -200,6 +238,11 @@ export class ComplaintService {
             "SELECT COUNT(*) as count FROM users WHERE role = 'Staff'"
         );
 
+        // User Count
+        const [userCount] = await pool.execute<RowDataPacket[]>(
+            'SELECT COUNT(*) as count FROM users'
+        );
+
         // 5. Average Resolution Time (in hours)
         // Only considers tickets that are 'Resolved' and have an updated_at time
         const [resolutionTime] = await pool.execute<RowDataPacket[]>(
@@ -225,6 +268,7 @@ export class ComplaintService {
             total: totalCount[0].total,
             resolved: resolvedCount,
             activeStaff: staffCount[0].count,
+            totalUsers: userCount[0].count,
             avgResolutionTime: parseFloat(resolutionTime[0].avgHours || 0).toFixed(1),
             byStatus: statusStats,
             byCategory: categoryStats,

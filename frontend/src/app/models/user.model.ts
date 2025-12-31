@@ -7,6 +7,7 @@ export interface User {
     role: 'User' | 'Staff' | 'Admin';
     contact_info?: string;
     created_at?: Date;
+    skills?: string[];
 }
 
 export interface UserRegistration {
@@ -25,4 +26,5 @@ export interface UserLogin {
 export interface AuthResponse {
     message: string;
     user: User;
+    token?: string;
 }

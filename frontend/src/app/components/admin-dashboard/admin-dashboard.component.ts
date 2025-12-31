@@ -26,6 +26,10 @@ export class AdminDashboardComponent implements OnInit {
         private router: Router
     ) { }
 
+    filterValue: string = '';
+    filterStatus: string = 'All';
+    filteredComplaints: Complaint[] = [];
+
     ngOnInit(): void {
         this.loadData();
     }
@@ -37,6 +41,7 @@ export class AdminDashboardComponent implements OnInit {
         this.complaintService.getComplaints().subscribe({
             next: (response) => {
                 this.complaints = response.complaints;
+                this.applyFilters();
                 this.loading = false;
             },
             error: (error) => {
@@ -58,6 +63,27 @@ export class AdminDashboardComponent implements OnInit {
             next: (response) => this.staffMembers = response.staff,
             error: () => { }
         });
+    }
+
+    applyFilters(): void {
+        let temp = this.complaints;
+
+        // Filter by Status
+        if (this.filterStatus !== 'All') {
+            temp = temp.filter(c => c.status === this.filterStatus);
+        }
+
+        // Filter by Search (ID, Title, User)
+        if (this.filterValue) {
+            const val = this.filterValue.toLowerCase();
+            temp = temp.filter(c =>
+                (c.id && c.id.toString().includes(val)) ||
+                c.title.toLowerCase().includes(val) ||
+                (c.user_name && c.user_name.toLowerCase().includes(val))
+            );
+        }
+
+        this.filteredComplaints = temp;
     }
 
     assignStaff(complaint: Complaint, staffId: number): void {

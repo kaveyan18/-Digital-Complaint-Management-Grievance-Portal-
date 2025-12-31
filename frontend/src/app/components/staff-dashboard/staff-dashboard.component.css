@@ -210,3 +210,37 @@ td.mat-cell {
 tr.mat-mdc-row:hover {
     background-color: #F1F5F9;
 }
+
+@media (max-width: 768px) {
+    .staff-dashboard {
+        padding: 1.5rem;
+        padding-top: 90px;
+    }
+
+    .header-section h1 {
+        font-size: 1.75rem;
+        flex-wrap: wrap;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .filter-section {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .filter-field {
+        width: 100%;
+    }
+
+    .table-card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+}

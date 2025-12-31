@@ -20,8 +20,8 @@ export const registerUser = catchAsync(async (req: Request, res: Response, next:
         throw new AppError('Role must be User, Staff, or Admin', 400);
     }
 
-    const user = await userService.registerUser(req.body);
-    sendResponse(res, 201, 'User registered successfully', { user });
+    const { user, token } = await userService.registerUser(req.body);
+    sendResponse(res, 201, 'User registered successfully', { user, token });
 });
 
 // Login user
@@ -33,8 +33,8 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
         throw new AppError('Email and password are required', 400);
     }
 
-    const user = await userService.loginUser(req.body);
-    sendResponse(res, 200, 'Login successful', { user });
+    const { user, token } = await userService.loginUser(req.body);
+    sendResponse(res, 200, 'Login successful', { user, token });
 });
 
 // Get user by ID
@@ -48,5 +48,20 @@ export const getUserById = catchAsync(async (req: Request, res: Response, next: 
 export const getStaffMembers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const staff = await userService.getStaffMembers();
     sendResponse(res, 200, 'Staff members list', { staff });
+});
+
+// Get all users (Admin only)
+export const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const users = await userService.getAllUsers();
+    sendResponse(res, 200, 'All users list', { users });
+});
+
+// Update user profile
+export const updateUserProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { name, contact_info, skills } = req.body;
+
+    const user = await userService.updateUser(id, { name, contact_info, skills });
+    sendResponse(res, 200, 'Profile updated successfully', { user });
 });
 

@@ -193,6 +193,15 @@
 }
 
 @media (max-width: 600px) {
+    .track-container {
+        padding: 1rem;
+        padding-top: 80px;
+    }
+
+    .search-card {
+        padding: 1.5rem 1rem;
+    }
+
     .search-box {
         flex-direction: column;
     }
@@ -202,7 +211,16 @@
         margin-top: 0;
     }
 
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
     .step-label {
-        font-size: 0.7rem;
+        display: none;
+        /* Hide labels on very small screens or make them smaller */
+    }
+
+    .stepper-content {
+        padding: 1rem;
     }
 }

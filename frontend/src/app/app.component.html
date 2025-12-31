@@ -14,6 +14,8 @@
         <a routerLink="/" fragment="how-it-works" class="nav-item">Works</a>
         <a routerLink="/" fragment="features" class="nav-item">Features</a>
         <a routerLink="/login" routerLinkActive="nav-item-active" class="nav-item">Login</a>
+        <a routerLink="/register" routerLinkActive="nav-item-active" class="nav-item mobile-only"
+          style="color: var(--accent-color);">Register</a>
       </ng-container>
 
       <!-- User Links -->
@@ -22,6 +24,9 @@
           class="nav-item">Home</a>
         <a routerLink="/track-complaint" routerLinkActive="nav-item-active" class="nav-item">Tracking</a>
         <a routerLink="/complaints" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
+        <a routerLink="/profile" routerLinkActive="nav-item-active" class="nav-item mobile-only">My Profile</a>
+        <a (click)="logout()" class="nav-item mobile-only"
+          style="cursor: pointer; color: var(--danger-color);">Logout</a>
       </ng-container>
 
       <!-- Staff Links -->
@@ -29,6 +34,8 @@
         <a routerLink="/" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}"
           class="nav-item">Home</a>
         <a routerLink="/staff/dashboard" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
+        <a (click)="logout()" class="nav-item mobile-only"
+          style="cursor: pointer; color: var(--danger-color);">Logout</a>
       </ng-container>
 
       <!-- Admin Links -->
@@ -37,12 +44,14 @@
           class="nav-item">Home</a>
         <a routerLink="/admin/dashboard" routerLinkActive="nav-item-active" class="nav-item">Dashboard</a>
         <a routerLink="/admin/analytics" routerLinkActive="nav-item-active" class="nav-item">Analytics</a>
+        <a (click)="logout()" class="nav-item mobile-only"
+          style="cursor: pointer; color: var(--danger-color);">Logout</a>
       </ng-container>
     </div>
 
     <!-- Right Actions -->
     <div class="nav-right-actions">
-      <a *ngIf="!authService.isLoggedIn" routerLink="/register" class="contact-us-btn">Register</a>
+      <a *ngIf="!authService.isLoggedIn" routerLink="/register" class="contact-us-btn desktop-only">Register</a>
 
       <div class="user-profile-nav" *ngIf="authService.isLoggedIn">
         <!-- Notification Bell -->
@@ -74,7 +83,9 @@
             style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem; margin-right: 0.25rem;">account_circle</mat-icon>
           {{authService.currentUser?.name}}
         </span>
-        <button (click)="logout()" class="btn-logout" style="border-radius: 999px;">Logout</button>
+        <button routerLink="/profile" class="btn-logout desktop-only"
+          style="border-radius: 999px; margin-right: 0.5rem; color: var(--accent-color); border-color: var(--accent-color);">Profile</button>
+        <button (click)="logout()" class="btn-logout desktop-only" style="border-radius: 999px;">Logout</button>
       </div>
 
       <button class="mobile-toggle" (click)="toggleMobileMenu()">
@@ -92,7 +103,7 @@
   <div class="container footer-content">
     <div class="footer-brand">
       <h3 style="margin-bottom: 0.5rem;">
-        <mat-icon style="color: #3B82F6; margin-right: 0.5rem;">security</mat-icon> ResolveDesk
+        <mat-icon style="color: black; margin-right: 0.5rem;">security</mat-icon> ResolveDesk
       </h3>
       <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; max-width: 320px;">
         Centralized grievance redressal system empowering citizens with faster resolutions and transparent tracking.

@@ -15,6 +15,8 @@ export interface Complaint {
     feedback?: string | null;
     created_at?: Date;
     updated_at?: Date;
+    sla_deadline?: Date | null;
+    is_escalated?: boolean;
 }
 
 // Complaint creation request

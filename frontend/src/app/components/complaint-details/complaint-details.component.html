@@ -145,6 +145,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Audit Trail (History) -->
+            <div class="audit-section" *ngIf="logs.length > 0">
+                <h3><mat-icon>history</mat-icon> Audit History</h3>
+                <div class="audit-list">
+                    <div class="audit-item" *ngFor="let log of logs">
+                        <div class="audit-icon-wrapper">
+                            <div class="audit-line"></div>
+                            <mat-icon class="audit-icon">
+                                {{ log.action === 'CREATED' ? 'add_circle' :
+                                log.action === 'STATUS_CHANGE' ? 'sync_alt' :
+                                log.action === 'ASSIGNED' ? 'person_add' :
+                                log.action.includes('AUTO') ? 'smart_toy' : 'info' }}
+                            </mat-icon>
+                        </div>
+                        <div class="audit-content">
+                            <p class="audit-action">{{ log.action }} <span class="audit-date">{{ log.created_at |
+                                    date:'medium' }}</span></p>
+                            <p class="audit-details">by {{ log.user_name || 'System (Auto)' }} ({{log.user_role ||
+                                'Bot'}})</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </mat-card-content>
 
         <mat-card-actions class="action-buttons">

@@ -10,6 +10,7 @@ import userRoutes from './routes/userRoutes';
 import complaintRoutes from './routes/complaintRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { startSLAJob } from './services/schedulerService';
 
 // Initialize Express app
 const app: Application = express();
@@ -52,6 +53,9 @@ const startServer = async (): Promise<void> => {
         if (!dbConnected) {
             console.error('Failed to connect to database. Please check your MySQL configuration.');
             console.log('Server will start but database operations will fail.');
+        } else {
+            // Start Scheduler
+            startSLAJob();
         }
 
         app.listen(PORT, () => {

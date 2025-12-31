@@ -4,7 +4,7 @@
             <h1 class="welcome-msg" *ngIf="currentUser">Welcome, {{currentUser.name}}</h1>
             <p class="subtitle">Manage and track the status of your grievances efficiently.</p>
         </div>
-        <button class="btn btn-primary" routerLink="/complaints/new">
+        <button class="btn btn-primary" routerLink="/complaints/new" *ngIf="authService.userRole === 'User'">
             <mat-icon style="margin-right: 0.5rem">add</mat-icon>
             New Complaint
         </button>
@@ -92,7 +92,7 @@
         <table mat-table [dataSource]="filteredComplaints" class="full-width">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>Details</th>
+                <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let complaint">
                     <span class="id-text">{{complaint.complaint_unique_id || '#' + complaint.id}}</span>
                 </td>

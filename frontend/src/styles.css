@@ -72,7 +72,7 @@ html {
 }
 
 body {
-    height: 100%;
+    min-height: 100vh;
     font-family: var(--font-body);
     background-color: var(--background-color);
     color: var(--text-primary);
@@ -116,6 +116,12 @@ a:hover {
     /* Increased from 1200px for wider screens */
     margin: 0 auto;
     padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
 }
 
 .flex-center {
@@ -190,6 +196,12 @@ a:hover {
 .btn-outline:hover {
     background: var(--background-color);
     border-color: var(--text-secondary);
+}
+
+.btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: var(--radius-md);
 }
 
 /* Form Styles */
@@ -383,17 +395,21 @@ textarea:focus {
 @media (max-width: 992px) {
     .nav-links-pill-container {
         position: fixed;
-        top: 80px;
+        top: 70px;
+        /* Adjusted top */
         left: 1rem;
         right: 1rem;
         background: #ffffff;
         flex-direction: column;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         transform: translateY(-150%);
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 998;
+        align-items: flex-start;
+        /* Left align items in menu */
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .nav-links-pill-container.mobile-active {
@@ -402,33 +418,46 @@ textarea:focus {
 
     .nav-item {
         width: 100%;
-        text-align: center;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
     }
 
     .mobile-toggle {
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f8fafc;
+        transition: background 0.2s;
+    }
+
+    .mobile-toggle:active {
+        background: #e2e8f0;
     }
 
     .nav-right-actions {
-        gap: 0.5rem;
+        gap: 1rem;
     }
 
     .user-name {
         display: none;
     }
-}
 
-@media (max-width: 480px) {
-
-    .login-container,
-    .registration-container {
-        padding: 1rem;
+    .desktop-only {
+        display: none !important;
     }
 
-    .btn {
-        width: 100%;
+    .mobile-only {
+        display: block !important;
+    }
+}
+
+@media (min-width: 993px) {
+    .mobile-only {
+        display: none !important;
     }
 }
 
@@ -463,9 +492,7 @@ textarea:focus {
 
 .btn-logout:hover {
     background: #FEF2F2;
-    /* Red 50 */
     color: #EF4444;
-    /* Red 500 */
     border-color: #FECACA;
 }
 
@@ -473,15 +500,17 @@ textarea:focus {
     margin-left: 0.5rem;
 }
 
+/* Remove the old problematic 768px query for user-profile-nav */
 @media (max-width: 768px) {
     .user-profile-nav {
         margin-left: 0;
         padding-left: 0;
         border-left: none;
-        width: 100%;
-        justify-content: space-between;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border-color);
+        gap: 0.5rem;
+    }
+
+    .nav-content {
+        padding: 0 1rem;
     }
 }
 
@@ -530,6 +559,8 @@ textarea:focus {
 
 .notif-dropdown {
     width: 350px;
+    max-width: 90vw;
+    /* Responsive max width */
     max-height: 500px;
     padding: 0;
     border-radius: var(--radius-lg);

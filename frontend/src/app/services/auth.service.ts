@@ -30,8 +30,16 @@ export class AuthService {
             map(response => {
                 return {
                     message: response.message,
-                    user: response.data.user
+                    user: response.data.user,
+                    token: response.data.token
                 };
+            }),
+            tap(response => {
+                if (response && response.token) {
+                    localStorage.setItem('token', response.token);
+                    localStorage.setItem('currentUser', JSON.stringify(response.user));
+                    this.currentUserSubject.next(response.user);
+                }
             })
         );
     }
@@ -41,12 +49,14 @@ export class AuthService {
             map(response => {
                 return {
                     message: response.message,
-                    user: response.data.user
+                    user: response.data.user,
+                    token: response.data.token
                 };
             }),
             tap(response => {
-                if (response && response.user) {
+                if (response && response.user && response.token) {
                     localStorage.setItem('currentUser', JSON.stringify(response.user));
+                    localStorage.setItem('token', response.token);
                     this.currentUserSubject.next(response.user);
                 }
             })
@@ -55,7 +65,12 @@ export class AuthService {
 
     logout(): void {
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
         this.currentUserSubject.next(null);
+    }
+
+    getToken(): string | null {
+        return localStorage.getItem('token');
     }
 
     get currentUser(): User | null {
@@ -73,6 +88,27 @@ export class AuthService {
     getStaffMembers(): Observable<{ staff: User[] }> {
         return this.http.get<any>(`${this.apiUrl}/staff`).pipe(
             map(response => response.data)
+        );
+    }
+
+    getAllUsers(): Observable<{ users: User[] }> {
+        return this.http.get<any>(`${this.apiUrl}`).pipe(
+            map(response => response.data)
+        );
+    }
+
+    updateUser(id: number, data: any): Observable<{ user: User }> {
+        return this.http.put<any>(`${this.apiUrl}/${id}`, data).pipe(
+            map(response => {
+                // Update local current user if it matches
+                const current = this.currentUserSubject.value;
+                if (current && current.id === id) {
+                    const updated = { ...current, ...response.data.user };
+                    localStorage.setItem('user', JSON.stringify(updated));
+                    this.currentUserSubject.next(updated);
+                }
+                return response.data;
+            })
         );
     }
 }

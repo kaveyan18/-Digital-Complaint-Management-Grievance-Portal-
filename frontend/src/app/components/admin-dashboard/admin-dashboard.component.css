@@ -230,3 +230,28 @@ td.mat-cell {
     background-color: #D1FAE5;
     color: #065F46;
 }
+
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding: 1.5rem;
+        padding-top: 90px;
+    }
+
+    .header-section h1 {
+        font-size: 1.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Force horizontal scroll for table on mobile */
+    ::ng-deep .mat-mdc-card {
+        overflow-x: auto !important;
+    }
+
+    table {
+        min-width: 800px;
+    }
+}

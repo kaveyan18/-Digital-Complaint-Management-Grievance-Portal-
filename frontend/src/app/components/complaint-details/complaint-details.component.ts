@@ -26,10 +26,16 @@ export class ComplaintDetailsComponent implements OnInit {
         private notificationService: NotificationService
     ) { }
 
+    // History Logs
+    logs: any[] = [];
+
+    // ... existing Feedback properties ...
+
     ngOnInit(): void {
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.loadComplaint(+id);
+            this.loadLogs(+id);
         }
     }
 
@@ -56,6 +62,17 @@ export class ComplaintDetailsComponent implements OnInit {
             }
         });
     }
+
+    loadLogs(id: number): void {
+        this.complaintService.getComplaintLogs(id).subscribe({
+            next: (logs) => {
+                this.logs = logs;
+            },
+            error: (err) => console.error('Failed to load logs', err)
+        });
+    }
+
+    // ... goBack ...
 
     getValidStatuses(): string[] {
         if (!this.complaint) return [];
@@ -89,6 +106,8 @@ export class ComplaintDetailsComponent implements OnInit {
                         this.complaint = res.data.complaint;
                         this.selectedStatus = this.complaint!.status;
                         this.notificationService.showSuccess('Status updated successfully');
+                        // Refresh logs to show the new status change immediately
+                        this.loadLogs(this.complaint!.id!);
                     }
                 },
                 error: (error) => {

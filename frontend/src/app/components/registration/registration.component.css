@@ -190,11 +190,23 @@ mat-spinner {
     display: none;
   }
 
+  .registration-form-container {
+    padding-top: 100px;
+  }
+
   .registration-container {
     padding: 1rem;
   }
 
   .registration-card {
     padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .registration-form-container {
+    padding-top: 80px;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }

@@ -7,29 +7,34 @@ import {
     deleteComplaint,
     getComplaintStats,
     trackComplaint,
-    submitFeedback
+    submitFeedback,
+    getComplaintLogs
 } from '../controllers/complaintController';
 import { upload } from '../middleware/upload';
+import { authenticate } from '../middleware/authMiddleware';
 
 const router = Router();
 
-// GET /api/complaints/stats - Get complaint statistics (optional - admin)
+// GET /api/complaints/stats - Get global stats (Public)
 router.get('/stats', getComplaintStats);
 
 // GET /api/complaints/track/:uniqueId - Track complaint by unique ID
 router.get('/track/:uniqueId', trackComplaint);
 
 // POST /api/complaints - Create new complaint
-router.post('/', upload.single('attachment'), createComplaint);
+router.post('/', authenticate, upload.single('attachment'), createComplaint);
 
-// GET /api/complaints - Get all complaints (filtered by role/user)
-router.get('/', getComplaints);
+// GET /api/complaints - List all complaints
+router.get('/', authenticate, getComplaints);
 
-// GET /api/complaints/:id - Get complaint by ID
-router.get('/:id', getComplaintById);
+// GET /api/complaints/:id/logs - Get complaint logs
+router.get('/:id/logs', authenticate, getComplaintLogs);
+
+// GET /api/complaints/:id - Get specific complaint
+router.get('/:id', authenticate, getComplaintById);
 
 // PUT /api/complaints/:id - Update complaint (status, assignment, notes)
-router.put('/:id', upload.single('attachment'), updateComplaint);
+router.put('/:id', authenticate, upload.single('attachment'), updateComplaint);
 
 // DELETE /api/complaints/:id - Delete complaint
 router.delete('/:id', deleteComplaint);

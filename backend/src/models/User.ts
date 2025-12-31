@@ -7,6 +7,7 @@ export interface User {
     role: 'User' | 'Staff' | 'Admin';
     contact_info?: string;
     created_at?: Date;
+    skills?: string; // Stored as JSON string in DB
 }
 
 // User registration request
@@ -32,4 +33,11 @@ export interface UserResponse {
     role: 'User' | 'Staff' | 'Admin';
     contact_info?: string;
     created_at?: Date;
+    skills?: string[]; // parsed array
+}
+
+export interface UserUpdate {
+    name?: string;
+    contact_info?: string;
+    skills?: string[];
 }

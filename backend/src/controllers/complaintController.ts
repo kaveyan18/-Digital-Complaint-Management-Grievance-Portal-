@@ -92,7 +92,9 @@ export const updateComplaint = catchAsync(async (req: Request, res: Response, ne
         }]);
     }
 
-    const complaint = await complaintService.updateComplaint(id, req.body);
+    // @ts-ignore
+    const userId = (req as any).user ? (req as any).user.id : null;
+    const complaint = await complaintService.updateComplaint(id, req.body, userId);
     sendResponse(res, 200, 'Complaint updated successfully', { complaint });
 });
 
@@ -120,5 +122,12 @@ export const submitFeedback = catchAsync(async (req: Request, res: Response) => 
 
     await complaintService.submitFeedback(id, rating, feedback);
     sendResponse(res, 200, 'Feedback submitted successfully');
+});
+
+// Get complaint logs
+export const getComplaintLogs = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const logs = await complaintService.getComplaintLogs(id);
+    sendResponse(res, 200, 'Complaint history', { logs });
 });
 

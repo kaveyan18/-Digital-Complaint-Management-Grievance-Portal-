@@ -12,6 +12,7 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
 import { HomeComponent } from './components/home/home.component';
 import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
 import { AdminAnalyticsComponent } from './components/admin-analytics/admin-analytics.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -43,6 +44,11 @@ const routes: Routes = [
   {
     path: 'complaints/:id',
     component: ComplaintDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [AuthGuard]
   },
 

@@ -4,6 +4,8 @@
     padding-top: 110px;
     /* Offset for fixed navbar */
     opacity: 0;
+    max-width: 1400px;
+    margin: 0 auto;
     animation: fadeInUp 0.6s ease-out forwards;
 }
 
@@ -281,12 +283,27 @@ td.mat-cell {
 @media (max-width: 768px) {
     .complaint-list-container {
         padding: 1.5rem 1rem;
+        padding-top: 90px;
     }
 
     .header-section {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.5rem;
+        gap: 1rem;
+    }
+
+    .header-text h1.welcome-msg {
+        font-size: 1.75rem;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .filter-field {
+        width: 100%;
     }
 
     .table-card {
@@ -294,6 +311,6 @@ td.mat-cell {
     }
 
     table {
-        min-width: 800px;
+        min-width: 900px;
     }
 }

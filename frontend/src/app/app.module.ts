@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Angular Material Modules
@@ -38,6 +38,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TrackComplaintComponent } from './components/track-complaint/track-complaint.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AdminAnalyticsComponent } from './components/admin-analytics/admin-analytics.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { AdminAnalyticsComponent } from './components/admin-analytics/admin-anal
     HomeComponent,
     ResolutionDialogComponent,
     TrackComplaintComponent,
-    AdminAnalyticsComponent
+    TrackComplaintComponent,
+    AdminAnalyticsComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +84,9 @@ import { AdminAnalyticsComponent } from './components/admin-analytics/admin-anal
     MatDialogModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

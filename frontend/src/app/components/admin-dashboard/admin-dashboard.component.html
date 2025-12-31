@@ -50,6 +50,25 @@
                 <span class="stat-label">{{item.status}}</span>
             </div>
         </div>
+
+        <!-- Staff Performance (Top Performer) -->
+        <div class="stat-card" style="grid-column: span 2;"
+            *ngIf="stats.staffPerformance && stats.staffPerformance.length > 0">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                <mat-icon style="color: white;">emoji_events</mat-icon>
+            </div>
+            <div class="stat-info" style="width: 100%;">
+                <span class="stat-label" style="margin-bottom: 0.5rem;">Top Resolvers</span>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div *ngFor="let staff of stats.staffPerformance.slice(0, 3)"
+                        style="display: flex; align-items: center; gap: 0.5rem; background: #f1f5f9; padding: 4px 10px; border-radius: 12px;">
+                        <span style="font-weight: 600; font-size: 0.9rem;">{{staff.name}}</span>
+                        <span
+                            style="background: #e2e8f0; padding: 2px 6px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">{{staff.resolved_count}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -72,11 +91,34 @@
 
     <!-- Complaints Table -->
     <mat-card *ngIf="!loading && complaints.length > 0">
-        <mat-card-header>
-            <mat-card-title>All Complaints</mat-card-title>
+        <mat-card-header style="display: block;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+                <mat-card-title>All Complaints</mat-card-title>
+
+                <div class="filter-controls" style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                    <mat-form-field appearance="outline" style="font-size: 0.9rem; width: 250px;">
+                        <mat-label>Search</mat-label>
+                        <input matInput [(ngModel)]="filterValue" (keyup)="applyFilters()"
+                            placeholder="ID, Title, or User">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" style="font-size: 0.9rem; width: 180px;">
+                        <mat-label>Status</mat-label>
+                        <mat-select [(ngModel)]="filterStatus" (selectionChange)="applyFilters()">
+                            <mat-option value="All">All Statuses</mat-option>
+                            <mat-option value="Open">Open</mat-option>
+                            <mat-option value="Assigned">Assigned</mat-option>
+                            <mat-option value="In-progress">In-Progress</mat-option>
+                            <mat-option value="Resolved">Resolved</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
         </mat-card-header>
         <mat-card-content>
-            <table mat-table [dataSource]="complaints" class="full-width">
+            <table mat-table [dataSource]="filteredComplaints" class="full-width">
                 <!-- ID -->
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef>ID</th>

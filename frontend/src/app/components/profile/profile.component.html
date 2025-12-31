@@ -1,0 +1,307 @@
+<div class="profile-container">
+    <div class="profile-header-card fade-in">
+        <div class="profile-avatar-section">
+            <div class="avatar-circle">
+                {{getInitials(user?.name)}}
+            </div>
+            <div class="user-info">
+                <h1 *ngIf="!isEditing">{{user?.name}}</h1>
+                <mat-form-field *ngIf="isEditing" appearance="outline" class="dense-input">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="editData.name">
+                </mat-form-field>
+
+                <span class="role-badge" [ngClass]="user?.role?.toLowerCase()">{{user?.role}}</span>
+
+                <div class="contact-web">
+                    <span><mat-icon>email</mat-icon> {{user?.email}}</span>
+
+                    <span *ngIf="!isEditing && user?.contact_info"><mat-icon>phone</mat-icon>
+                        {{user?.contact_info}}</span>
+                    <mat-form-field *ngIf="isEditing" appearance="outline" class="dense-input"
+                        style="margin-top: 0.5rem;">
+                        <mat-label>Contact Info</mat-label>
+                        <input matInput [(ngModel)]="editData.contact_info">
+                    </mat-form-field>
+                </div>
+                <p class="joined-date">Member since {{user?.created_at | date:'mediumDate'}}</p>
+            </div>
+
+            <div class="header-actions">
+                <button mat-stroked-button *ngIf="!isEditing" (click)="toggleEditMode()">
+                    <mat-icon>edit</mat-icon> Edit
+                </button>
+                <div *ngIf="isEditing" class="edit-actions">
+                    <button mat-button (click)="cancelEdit()">Cancel</button>
+                    <button mat-raised-button color="primary" (click)="saveProfile()">Save</button>
+                </div>
+                <button mat-icon-button (click)="logout()" *ngIf="!isEditing" matTooltip="Logout">
+                    <mat-icon>logout</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid (Shared but labeled differently) -->
+    <div class="stats-grid fade-in-delay-1" *ngIf="user?.role !== 'Admin'">
+        <div class="stat-card total">
+            <div class="stat-icon-bg">
+                <mat-icon>{{user?.role === 'Staff' ? 'assignment_ind' : 'assignment'}}</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{user?.role === 'Staff' ? 'Assigned Complaints' : 'Total Complaints'}}</h3>
+                <p class="stat-number">{{stats.total}}</p>
+            </div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-icon-bg">
+                <mat-icon>{{user?.role === 'Staff' ? 'engineering' : 'pending_actions'}}</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>{{user?.role === 'Staff' ? 'Active Workload' : 'Open / In-Progress'}}</h3>
+                <p class="stat-number">{{stats.open}}</p>
+            </div>
+        </div>
+        <div class="stat-card resolved">
+            <div class="stat-icon-bg">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>Resolved</h3>
+                <p class="stat-number">{{stats.resolved}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Specific: Skills Section -->
+    <div class="skills-section fade-in-delay-1" *ngIf="user?.role === 'Staff'">
+        <h2>Skills & Expertise</h2>
+
+        <div *ngIf="isEditing" class="skill-edit-container">
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; flex-wrap: wrap;">
+
+                <!-- Skill Selector -->
+                <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;" class="dense-input">
+                    <mat-label>Select Skill</mat-label>
+                    <mat-select [(ngModel)]="selectedSkill" (selectionChange)="onSkillSelect($event.value)">
+                        <mat-option *ngFor="let skill of availableSkills" [value]="skill">
+                            {{skill}}
+                        </mat-option>
+                        <mat-option value="Other">Other (Add Custom)</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Custom Skill Input (Visible only if 'Other' is selected) -->
+                <mat-form-field *ngIf="showOtherSkillInput" appearance="outline" style="flex: 1; min-width: 200px;"
+                    class="dense-input fade-in">
+                    <mat-label>Enter Custom Skill</mat-label>
+                    <input matInput [(ngModel)]="newSkill" (keyup.enter)="addSkill()" placeholder="e.g. Roof Repair">
+                    <button mat-icon-button matSuffix (click)="addSkill()">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </mat-form-field>
+
+            </div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: -0.5rem; margin-bottom: 1rem;">
+                Select a skill from the list or choose "Other" to add your own.
+            </p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <!-- View Mode -->
+                <div class="skill-chips" *ngIf="!isEditing">
+                    <span class="skill-chip" *ngFor="let skill of getStaffSkills()">
+                        <mat-icon>verified</mat-icon> {{skill}}
+                    </span>
+                    <span *ngIf="getStaffSkills().length === 0" style="color: #94a3b8; font-style: italic;">
+                        No skills added yet. Click Edit to add skills.
+                    </span>
+                </div>
+
+                <!-- Edit Mode -->
+                <div class="skill-chips" *ngIf="isEditing">
+                    <span class="skill-chip" *ngFor="let skill of editData.skills; let i = index"
+                        style="background: #e2e8f0;">
+                        {{skill}}
+                        <mat-icon (click)="removeSkill(i)"
+                            style="cursor: pointer; font-size: 18px; width: 18px; height: 18px; color: #ef4444; margin-left: 5px;">close</mat-icon>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="staff-actions" style="margin-top: 2rem;" *ngIf="!isEditing">
+            <button class="btn btn-primary btn-lg full-width-mobile" routerLink="/staff/dashboard">
+                Go to Staff Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin: System Overview -->
+    <div class="stats-grid fade-in-delay-1" *ngIf="user?.role === 'Admin'">
+        <div class="stat-card total">
+            <div class="stat-icon-bg">
+                <mat-icon>assessment</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>Total Complaints</h3>
+                <p class="stat-number">{{adminStats.total}}</p>
+            </div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-icon-bg">
+                <mat-icon>people</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>Total Users</h3>
+                <p class="stat-number">{{adminStats.totalUsers}}</p>
+            </div>
+        </div>
+        <div class="stat-card resolved">
+            <div class="stat-icon-bg">
+                <mat-icon>engineering</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>Total Staff</h3>
+                <p class="stat-number">{{adminStats.activeStaff}}</p>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left: 5px solid #10b981;">
+            <div class="stat-icon-bg" style="background: #10b981;">
+                <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-content">
+                <h3>Resolved</h3>
+                <p class="stat-number">{{adminStats.resolved}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin: User Management Table -->
+    <div class="recent-complaints-section fade-in-delay-2" *ngIf="user?.role === 'Admin'">
+        <div class="user-management-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <h2>User & Staff Management</h2>
+
+            <div class="filter-controls" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <mat-form-field appearance="outline" style="font-size: 0.9rem; width: 200px;">
+                    <mat-label>Search</mat-label>
+                    <input matInput [(ngModel)]="filterValue" (keyup)="applyUserFilter()" placeholder="Name or Email">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="font-size: 0.9rem; width: 150px;">
+                    <mat-label>Role</mat-label>
+                    <mat-select [(ngModel)]="selectedRoleFilter" (selectionChange)="applyUserFilter()">
+                        <mat-option value="All">All Roles</mat-option>
+                        <mat-option value="User">Users</mat-option>
+                        <mat-option value="Staff">Staff</mat-option>
+                        <mat-option value="Admin">Admins</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table mat-table [dataSource]="filteredUserList" class="full-width">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let user">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="avatar-sm">{{getInitials(user.name)}}</div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: 500;">{{user.name}}</span>
+                                <span style="font-size: 0.8rem; color: #64748b;">Joined {{user.created_at |
+                                    date:'shortDate'}}</span>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef> Email </th>
+                    <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+                </ng-container>
+
+                <!-- Role Column -->
+                <ng-container matColumnDef="role">
+                    <th mat-header-cell *matHeaderCellDef> Role </th>
+                    <td mat-cell *matCellDef="let user">
+                        <span class="role-chip" [ngClass]="user.role.toLowerCase()">{{user.role}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let user">
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="changeUserRole(user)">
+                                <mat-icon>admin_panel_settings</mat-icon>
+                                <span>{{ user.role === 'Staff' ? 'Demote to User' : 'Promote to Staff' }}</span>
+                            </button>
+                            <button mat-menu-item class="text-danger" (click)="toggleUserStatus(user)">
+                                <mat-icon color="warn">block</mat-icon>
+                                <span>Disable Account</span>
+                            </button>
+                            <button mat-menu-item class="text-danger" (click)="removeUser(user)">
+                                <mat-icon color="warn">delete</mat-icon>
+                                <span>Remove User</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- User/Staff: Recent Complaints Section (Hidden for Admin) -->
+    <div class="recent-complaints-section fade-in-delay-2" *ngIf="user?.role !== 'Admin'">
+        <div class="section-header">
+            <h2>{{user?.role === 'Staff' ? 'Recent Assignments & Resolutions' : 'Recent Activity'}}</h2>
+            <button class="btn btn-link" [routerLink]="user?.role === 'Staff' ? '/staff/dashboard' : '/complaints'">
+                View All
+            </button>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loading && complaints.length === 0">
+            <mat-icon>inbox</mat-icon>
+            <h3>No complaints found</h3>
+            <p *ngIf="user?.role === 'User'">You haven't submitted any complaints. Start by raising one now.</p>
+            <p *ngIf="user?.role === 'Staff'">No complaints currently assigned to you.</p>
+            <button *ngIf="user?.role === 'User'" class="btn btn-primary" routerLink="/complaints/new">Raise
+                Complaint</button>
+        </div>
+
+        <!-- Complaint List -->
+        <div class="complaint-list" *ngIf="recentComplaints.length > 0">
+            <div class="complaint-item" *ngFor="let c of recentComplaints" [routerLink]="['/complaints', c.id]">
+                <div class="complaint-main">
+                    <div class="id-badge">#{{c.id}}</div>
+                    <div class="complaint-details">
+                        <h4>{{c.title}}</h4>
+                        <span class="category-text">{{c.category}}</span>
+                    </div>
+                </div>
+                <div class="complaint-meta">
+                    <span class="date">{{c.created_at | date:'shortDate'}}</span>
+                    <span class="status-badge" [ngClass]="'status-' + c.status.toLowerCase().replace(' ', '-')">
+                        {{c.status}}
+                    </span>
+                    <mat-icon class="chevron">chevron_right</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
