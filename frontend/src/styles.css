@@ -4,6 +4,35 @@
 @import './app/styles-footer.css';
 
 :root {
+    /* Smooth Scrolling & Transitions */
+    scroll-behavior: smooth;
+}
+
+/* Page Fade Transition */
+body {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Router Outlet Animation Support */
+app-root {
+    display: block;
+    animation: fadePageIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes fadePageIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+:root {
     --primary-color: #000000;
     /* Black */
     --primary-light: #333333;

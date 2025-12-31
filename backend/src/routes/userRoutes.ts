@@ -8,13 +8,15 @@ import {
     updateUserProfile
 } from '../controllers/userController';
 
+import { authLimiter } from '../middleware/rateLimiter';
+
 const router = Router();
 
 // POST /api/users/register - Register new user with role selection
-router.post('/register', registerUser);
+router.post('/register', authLimiter, registerUser);
 
 // POST /api/users/login - Login user
-router.post('/login', loginUser);
+router.post('/login', authLimiter, loginUser);
 
 // GET /api/users - Get all users (Admin)
 router.get('/', getAllUsers);

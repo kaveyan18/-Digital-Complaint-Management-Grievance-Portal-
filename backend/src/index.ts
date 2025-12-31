@@ -21,6 +21,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+import { apiLimiter } from './middleware/rateLimiter';
+app.use('/api', apiLimiter);
+
 // Serve uploaded files
 import path from 'path';
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
