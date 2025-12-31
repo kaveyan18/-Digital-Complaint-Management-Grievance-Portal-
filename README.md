@@ -163,7 +163,7 @@ matrimony/Cap/
 *Lead Developer*: Kaveyan S
 *Team member*:Rajakarthikeyan V
 Muvvala Saiteja
-Narra Venkatesh
+Narra Venkatesh.
 *Email*: dev@resolvedesk.com
 
 ---
